@@ -9,36 +9,43 @@
   </head>
   <body>
     <article id="article">
-      <h1 id="title" class="text-center h2">Crostalk Detector<br></h1>
-      <canvas id="canvas" width="200" height="200"></canvas>
+      <h1 id="title" class="text-center h2">Crosstalk Detector<br></h1>
+      <canvas id="canvas" width="600" height="100"></canvas>
+      <br>
       <div class="container-b">
         <div class="btn-toolbar">
           <div class="btn-group">
-            <button id="start-button" class="btn btn-outline-dark">🚀 Start</button>
-            <button id="start-button2" class="btn btn-outline-dark">🚀 Start 0-1-many</button>
-            <button id="start-button3" class="btn btn-outline-dark">🚀 Start 50f</button>
-            <button id="start-button4" class="btn btn-outline-dark">🚀 Start 50f reg</button>
+            <button id="start-button5" class="btn btn-outline-dark">Start recording</button>
+            <button id="start-button" class="btn btn-outline-dark">Start</button>
+            <button id="start-button2" class="btn btn-outline-dark">Start 0-1-many</button>
+            <button id="start-button3" class="btn btn-outline-dark">Start 50f</button>
+            <button id="start-button4" class="btn btn-outline-dark">Start 50f reg</button>
+            <button id="start-button6" class="btn btn-outline-dark">Start fam1/4</button>
+            <button id="start-button7" class="btn btn-outline-dark">Start fam1/4 reg</button>
+            <button id="start-button8" class="btn btn-outline-dark">Start fam1/4 sig-reg</button>
+            <button id="start-button9" class="btn btn-outline-dark">Start fam-id</button>
           </div>
           <div class="btn-group">
-            <button id="clear-button" class="btn btn-outline-dark">✨ Clear</button>
+            <button id="clear-button" class="btn btn-outline-dark">Stop</button>
           </div>
         </div>
       </div>
       <div class="container-b">
         <div class="output">
           <ul id="console" class="list-unstyled">
-            <li>hello. please load model.</li>
+            <li></li>
           </ul>
         </div>
       </div>
     </article>
     <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-<!--    <script src="https://qurihara.github.io/tfjs-webcam-predct/js/tensorflow.min.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script>
+<!--    <script src="https://qurihara.github.io/tfjs-webcam-predct/js/tensorflow.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script> -->
 <script>
 
-eruda.init();
+// eruda.init();
+var sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
 var modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 var classNames = [];
 /*
@@ -66,50 +73,104 @@ function success(data) {
 // start button event
 //-----------------------
 
+var recmode = false;
+$("#start-button5").click(function(){
+	startWebcam();
+    recmode = true;
+});
+
 $("#start-button").click(function(){
 	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 	loadModel(tf.loadLayersModel);
 	loadDict();
-	startWebcam();
-    //setInterval(predict, 1000);
     bufferSize = 1024;
     fftSize = bufferSize/2;
     predictCount = 20;
+	startWebcam();
 });
 
 $("#start-button2").click(function(){
 	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise-0-1-many/model-class/';
 	loadModel(tf.loadLayersModel);
 	loadDict();
-	startWebcam();
-    //setInterval(predict, 1000);
     bufferSize = 1024;
     fftSize = bufferSize/2;
     predictCount = 20;
+	startWebcam();
 });
 
 $("#start-button3").click(function(){
 	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx50_wnoise/model-class/';
 	loadModel(tf.loadLayersModel);
 	loadDict();
-	startWebcam();
-    //setInterval(predict, 1000);
     bufferSize = 1024;
     fftSize = bufferSize/2;
     predictCount = 50;
+	startWebcam();
 });
 
 $("#start-button4").click(function(){
 	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx50_wnoise/model-reg/';
 	loadModel(tf.loadLayersModel);
 // 	loadDict();
-	startWebcam();
-    //setInterval(predict, 1000);
     classify = false;
     bufferSize = 1024;
     fftSize = bufferSize/2;
     predictCount = 50;
+	startWebcam();
 });
+
+  $("#start-button6").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx50_family_fft-half/model-class/';
+	loadModel(tf.loadLayersModel);
+	loadDict();
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 50;
+    divOffset = 200;
+	startWebcam();
+});
+
+$("#start-button7").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx50_family_fft-half/model-reg/';
+	loadModel(tf.loadLayersModel);
+// 	loadDict();
+    classify = false;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 50;
+    divOffset = 200;
+	startWebcam();
+});
+
+$("#start-button8").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191127_1024fx50_family_fft-half-reduced-sigmoid/model-reg/';
+	loadModel(tf.loadLayersModel);
+// 	loadDict();
+    classify = false;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 50;
+    divOffset = 200;
+    regFactor = 2.0;
+    warnThre = 1.6;
+	startWebcam();
+});
+
+  $("#start-button9").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191127_1024fx50_family_fft-half-identity/model-class/';
+	loadModel(tf.loadLayersModel);
+ 	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 50;
+    divOffset = 200;
+//     regFactor = 2.0;
+//     warnThre = 1.6;
+	startWebcam();
+});
+
 
 
 //-----------------------
@@ -170,14 +231,6 @@ function startWebcam() {
 
 	navigator.mediaDevices.getUserMedia({ audio: true, video: false })
 	.then(function(stream) {
-//         mediaStream = stream;
-//         audio.inputsound = new Audio();
-//         audio.inputsound.src = mediaStream;
-//         source.input = acontext.createMediaStreamSource(mediaStream);
-//         console.log("The microphone turned on.");
-//         if (inputState.output === true) source.input.connect(acontext.destination);
-//         inputState.inputOn = true;
-//         c.execfuncs();
 
         // 録音関連
         localMediaStream = stream;
@@ -200,23 +253,7 @@ function startWebcam() {
 		console.log(err.name + ": " + err.message);
 	});
 
-	// vendorUrl = window.URL || window.webkitURL;
-	//
-	// navigator.getMedia = navigator.getUserMedia ||
-	// 					 navigator.webkitGetUserMedia ||
-	// 					 navigator.mozGetUserMedia ||
-	// 					 navigator.msGetUserMedia;
-	//
-	// navigator.getMedia({
-	// 	video: true,
-	// 	audio: false
-	// }, function(stream) {
-	// 	localStream = stream;
-	// 	video.srcObject = stream;
-	// 	video.play();
-	// }, function(error) {
-	// 	alert("Something wrong with webcam!");
-	// });
+    buf = tf.buffer([predictCount,fftSize]);
 }
 
 //-----------------------
@@ -247,7 +284,7 @@ async function predict(tensor){
       //regression
 //       console.log(prediction[0]);
       $("#console").append(`<li>${prediction[0]}</li>`);
-      if (prediction[0] >= 2.0) {
+      if (prediction[0]*regFactor >= warnThre) {
         $("#console").append(`crosstalk!`);
         onfire();
       }
@@ -257,30 +294,10 @@ async function predict(tensor){
 
 onfire = function(){
   console.log("cross talk!!");
+  sound.play();
   setTimeout(function(){
     //
   },1000);
-}
-//------------------------------
-// capture streaming video
-// to a canvas object
-//------------------------------
-
-function captureWebcam() {
-	tensor_image = preprocessImage(canvas);
-	return tensor_image;
-}
-
-//-----------------------
-// TensorFlow.js method
-// image to tensor
-//-----------------------
-
-function preprocessImage(image){
-	// let tensor = tf.fromPixels(image).resizeNearestNeighbor([100,100]).toFloat();
-	let tensor = tf.browser.fromPixels(image).resizeNearestNeighbor([size_x,size_y]).toFloat();
-	let offset = tf.scalar(255);
-    return tensor.div(offset).expandDims();
 }
 
 //-----------------------
@@ -292,24 +309,30 @@ $("#clear-button").click(function clear() {
 // 	location.reload();
 });
 
+var buf;
 var counter = 0;
-var stck;// = tf.variable(tf.tensor([0]));//tf.zeros([512], tf.float32); //
+// var stck;// = tf.variable(tf.tensor([0]));//tf.zeros([512], tf.float32); //
 var get_fft = function(dat){
 //   console.log(dat);
-  let offset = tf.scalar(100);
-  let fft = tf.signal.stft(tf.tensor1d(dat),bufferSize,bufferSize).abs().div(offset).flatten().slice(0,fftSize);
-//    console.log(fft.shape);
-  if (counter == 0) stck = fft;
-  else stck = tf.concat([stck,fft]);
+  const fft = tf.tidy(() => {
+      let offset = tf.scalar(divOffset);
+      let fft = tf.signal.stft(tf.tensor1d(dat),bufferSize,bufferSize).abs().div(offset).flatten().slice(0,fftSize);
+      //    console.log(fft.shape);
+      return fft.dataSync();
+  });
+  for (var i=0;i<fftSize;i++) buf.set(fft[i],counter,i);
+//   if (counter == 0) stck = fft;
+//   else stck = tf.concat([stck,fft]);
 //   console.log(stck.shape);
   counter++;
   if (counter == predictCount) {
     counter = 0;
-//     console.log("time to predict");
-    let mat = stck.reshape([predictCount,fftSize]).expandDims().expandDims(-1);
+    const mat = buf.toTensor().expandDims().expandDims(-1);
+//     let mat = stck.reshape([predictCount,fftSize]).expandDims().expandDims(-1);
 //     console.log(stck.size)
     predict(mat);
-    stck = null;
+//     stck = null;
+    mat.dispose();
   }
 }
 
@@ -318,13 +341,16 @@ var get_fft = function(dat){
 var localMediaStream = null;
 var localScriptProcessor = null;
 var audioContext = new AudioContext();
-// var audioData = []; // 録音データ
+var audioData = []; // 録音データ
 var recordingFlg = false;
 
 var classify = true; //otherwise regression
 var bufferSize = 1024;
 var fftSize = bufferSize/2;
 var predictCount = 20;
+var divOffset = 100;
+var regFactor = 1.0;
+var warnThre = 2.0;
 
 // キャンバス
 var canvas = document.getElementById('canvas');
@@ -359,7 +385,12 @@ var onAudioProcess = function(e) {
 //     if(flag === true){
 //       console.log("min: " + min + ",max: " + max);
 //     }
-     get_fft(bufferData);
+
+    if (recmode == false){
+      get_fft(bufferData);
+    }else{
+      audioData.push(bufferData);
+    }
 
     // 波形を解析
     analyseVoice();
@@ -410,36 +441,76 @@ var analyseVoice = function() {
 }
 
 
-// // 解析開始
-// var startRecording = function() {
-//     recordingFlg = true;
-//     navigator.getUserMedia({audio: true}, function(stream) {
-//         // 録音関連
-//         localMediaStream = stream;
-//         var scriptProcessor = audioContext.createScriptProcessor(bufferSize, 1, 1);
-//         localScriptProcessor = scriptProcessor;
-//         var mediastreamsource = audioContext.createMediaStreamSource(stream);
-//         mediastreamsource.connect(scriptProcessor);
-//         scriptProcessor.onaudioprocess = onAudioProcess;
-//         scriptProcessor.connect(audioContext.destination);
-
-//         // 音声解析関連
-//         audioAnalyser = audioContext.createAnalyser();
-//         audioAnalyser.fftSize = 2048;
-//         frequencyData = new Uint8Array(audioAnalyser.frequencyBinCount);
-//         timeDomainData = new Uint8Array(audioAnalyser.frequencyBinCount);
-//         mediastreamsource.connect(audioAnalyser);
-//     },
-//     function(e) {
-//         console.log(e);
-//     });
-// };
-
 // 解析終了
 var endRecording = function() {
     recordingFlg = false;
 
-    //audioDataをサーバに送信するなど終了処理
+    if(recmode ===true){
+//       console.log(audioData);
+      let url = exportWAV(audioData);
+      console.log(url);
+      $("#console").append(`<a href="${url}">Download Audio</a><a>`);
+    }
+};
+
+var exportWAV = function(audioData) {
+          var encodeWAV = function(samples, sampleRate) {
+            var buffer = new ArrayBuffer(44 + samples.length * 2);
+            var view = new DataView(buffer);
+
+            var writeString = function(view, offset, string) {
+              for (var i = 0; i < string.length; i++){
+                view.setUint8(offset + i, string.charCodeAt(i));
+              }
+            };
+
+            var floatTo16BitPCM = function(output, offset, input) {
+              for (var i = 0; i < input.length; i++, offset += 2){
+                var s = Math.max(-1, Math.min(1, input[i]));
+                output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+              }
+            };
+
+            writeString(view, 0, 'RIFF');  // RIFFヘッダ
+            view.setUint32(4, 32 + samples.length * 2, true); // これ以降のファイルサイズ
+            writeString(view, 8, 'WAVE'); // WAVEヘッダ
+            writeString(view, 12, 'fmt '); // fmtチャンク
+            view.setUint32(16, 16, true); // fmtチャンクのバイト数
+            view.setUint16(20, 1, true); // フォーマットID
+            view.setUint16(22, 1, true); // チャンネル数
+            view.setUint32(24, sampleRate, true); // サンプリングレート
+            view.setUint32(28, sampleRate * 2, true); // データ速度
+            view.setUint16(32, 2, true); // ブロックサイズ
+            view.setUint16(34, 16, true); // サンプルあたりのビット数
+            writeString(view, 36, 'data'); // dataチャンク
+            view.setUint32(40, samples.length * 2, true); // 波形データのバイト数
+            floatTo16BitPCM(view, 44, samples); // 波形データ
+
+            return view;
+          };
+
+          var mergeBuffers = function(audioData) {
+            var sampleLength = 0;
+            for (var i = 0; i < audioData.length; i++) {
+              sampleLength += audioData[i].length;
+            }
+            var samples = new Float32Array(sampleLength);
+            var sampleIdx = 0;
+            for (var i = 0; i < audioData.length; i++) {
+              for (var j = 0; j < audioData[i].length; j++) {
+                samples[sampleIdx] = audioData[i][j];
+                sampleIdx++;
+              }
+            }
+            return samples;
+          };
+
+          var dataview = encodeWAV(mergeBuffers(audioData), audioContext.sampleRate);
+          var audioBlob = new Blob([dataview], { type: 'audio/wav' });
+
+          var myURL = window.URL || window.webkitURL;
+          var url = myURL.createObjectURL(audioBlob);
+          return url;
 };
 </script>
   </body>
