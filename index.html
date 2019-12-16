@@ -55,14 +55,14 @@
             <button id="start-button12" class="btn btn-outline-dark">Start fam-UT SpecAug</button>
             <button id="start-button13" class="btn btn-outline-dark">Start fam-UT SpecAug spm</button>
 -->
-            <button id="start-button14" class="btn btn-outline-dark">Start Detector(jvs20)</button>
+<button id="start-button14" class="btn btn-outline-dark">Detect(jvs20)</button>
 <!--            <button id="start-button15" class="btn btn-outline-dark">Start jvs30</button>
-            <button id="start-button16" class="btn btn-outline-dark">Start Detector(jvs20-small)</button>
-            <button id="start-button17" class="btn btn-outline-dark">Start Detector(jvs20-h)</button> -->
-            <button id="start-button18" class="btn btn-outline-dark">Start Detector(jvs20hard)</button>
-            <button id="start-button20" class="btn btn-outline-dark">Start Detector(juf-nn)</button>
-            <button id="start-buttonTest" class="btn btn-outline-dark">Alert Test</button>
-            <button id="clear-button" class="btn btn-outline-dark">Stop</button>
+<button id="start-button16" class="btn btn-outline-dark">Start Detector(jvs20-small)</button>
+<button id="start-button17" class="btn btn-outline-dark">Start Detector(jvs20-h)</button> -->
+<button id="start-button18" class="btn btn-outline-dark">Detect(jvs20hard)</button>
+<button id="start-button20" class="btn btn-outline-dark">Detect(juf-nn)</button>
+<button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
+<button id="clear-button" class="btn btn-outline-dark">Stop</button>
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
       <div class="container-b">
         <div class="btn-toolbar">
           <div class="btn-group" style="margin:  0 auto;">
-              <button id="start-button5" class="btn btn-outline-dark">Start recording</button>
+<!--              <button id="start-button5" class="btn btn-outline-dark">Start recording</button> -->
           </div>
         </div>
       </div>
@@ -91,8 +91,8 @@
     </article>
     <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-<!--    <script src="https://qurihara.github.io/tfjs-webcam-predct/js/tensorflow.min.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script>
+<!--    <script src="https://qurihara.github.io/tfjs-webcam-predct/js/tensorflow.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script> -->
 <script>
 
 function changeValue(value) {
@@ -100,7 +100,7 @@ function changeValue(value) {
   fireCount = value;
 }
 
-eruda.init();
+//eruda.init();
 var sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
 var modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 var classNames = [];
