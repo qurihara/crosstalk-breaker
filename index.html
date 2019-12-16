@@ -6,17 +6,43 @@
   <link rel="stylesheet" href="/css/starter-sample.css">
     <meta charset="UTF-8">
     <title>Crosstalk Detector</title>
+
+
+  <!-- PWA for iOS -->
+  <!-- アドレスバー等のブラウザのUIを非表示 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- default（Safariと同じ） / black（黒） / black-translucent（ステータスバーをコンテンツに含める） -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <!-- ホーム画面に表示されるアプリ名 -->
+  <meta name="apple-mobile-web-app-title" content="CTalk">
+  <!-- ホーム画面に表示されるアプリアイコン -->
+  <link rel="apple-touch-icon" href="https://qurihara.github.io/crosstalk-breaker/icon/ios/appicon-76@2x.png">
+
+
+  <!-- PWA for android -->
+  <!-- ウェブアプリマニフェストの読み込み -->
+  <link rel="manifest" href="manifest.json">
+  <!-- ServiceWorkerの登録 -->
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then((reg) => {
+        console.log('Service worker registered.', reg);
+      });
+  }
+  </script>
   </head>
-  <body>
+  <body id="all">
     <article id="article">
       <h1 id="title" class="text-center h2">Crosstalk Detector<br></h1>
-      <canvas id="canvas" width="600" height="100"></canvas>
-      <br>
+      <div>
+        <input type="range" name="num" min="1" max="10" step="1" value="4" style="margin:  0 auto;display:block;" onchange="changeValue(this.value)">
+        <h3 id="val" class="text-center h3">4</h3>
+      </div>
       <div class="container-b">
         <div class="btn-toolbar">
-          <div class="btn-group">
-            <button id="start-button5" class="btn btn-outline-dark">Start recording</button>
-            <button id="start-button" class="btn btn-outline-dark">Start</button>
+          <div class="btn-group" style="margin:  0 auto;">
+<!--            <button id="start-button" class="btn btn-outline-dark">Start</button>
             <button id="start-button2" class="btn btn-outline-dark">Start 0-1-many</button>
             <button id="start-button3" class="btn btn-outline-dark">Start 50f</button>
             <button id="start-button4" class="btn btn-outline-dark">Start 50f reg</button>
@@ -26,30 +52,59 @@
             <button id="start-button9" class="btn btn-outline-dark">Start fam-id</button>
             <button id="start-button10" class="btn btn-outline-dark">Start fam-UT</button>
             <button id="start-button11" class="btn btn-outline-dark">Start fam-UT reg</button>
-          </div>
-          <div class="btn-group">
+            <button id="start-button12" class="btn btn-outline-dark">Start fam-UT SpecAug</button>
+            <button id="start-button13" class="btn btn-outline-dark">Start fam-UT SpecAug spm</button>
+-->
+            <button id="start-button14" class="btn btn-outline-dark">Start Detector(jvs20)</button>
+<!--            <button id="start-button15" class="btn btn-outline-dark">Start jvs30</button>
+            <button id="start-button16" class="btn btn-outline-dark">Start Detector(jvs20-small)</button>
+            <button id="start-button17" class="btn btn-outline-dark">Start Detector(jvs20-h)</button> -->
+            <button id="start-button18" class="btn btn-outline-dark">Start Detector(jvs20hard)</button>
+            <button id="start-button20" class="btn btn-outline-dark">Start Detector(juf-nn)</button>
+            <button id="start-buttonTest" class="btn btn-outline-dark">Alert Test</button>
             <button id="clear-button" class="btn btn-outline-dark">Stop</button>
           </div>
         </div>
       </div>
+      <br>
+      <div class="container-b">
+        <div class="btn-toolbar">
+          <div class="btn-group" style="margin:  0 auto;">
+              <button id="start-button5" class="btn btn-outline-dark">Start recording</button>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <br>
+      <canvas id="canvas" width="400" height="100" style="margin:  0 auto;display:block;" ></canvas>
+      <br>
       <div class="container-b">
         <div class="output">
           <ul id="console" class="list-unstyled">
             <li></li>
           </ul>
+          <br>
+          <ul id="warning"></ul>
         </div>
       </div>
     </article>
     <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-<!--    <script src="https://qurihara.github.io/tfjs-webcam-predct/js/tensorflow.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script> -->
+<!--    <script src="https://qurihara.github.io/tfjs-webcam-predct/js/tensorflow.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script>
 <script>
 
-// eruda.init();
+function changeValue(value) {
+  document.getElementById("val").innerHTML = value;
+  fireCount = value;
+}
+
+eruda.init();
 var sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
 var modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 var classNames = [];
+var modelLoaded = false;
 /*
 load the class names
 */
@@ -203,6 +258,134 @@ $("#start-button11").click(function(){
 	startWebcam();
 });
 
+$("#start-button12").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191204_1024fx20_specaug/model-class/';
+	loadModel(tf.loadLayersModel);
+  	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 20;
+    divOffset = 200;
+//     regFactor = 2.0;
+//     warnThre = 2.0;
+    trans = true;
+ 	startWebcam();
+});
+
+$("#start-button13").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191204_1024fx20_specaug_wnoise_spm/model-class/';
+	loadModel(tf.loadLayersModel);
+  	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 20;
+    divOffset = 200;
+//     regFactor = 2.0;
+//     warnThre = 2.0;
+    trans = true;
+ 	startWebcam();
+});
+
+$("#start-button14").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191209_1024fx20_jvs/model-class/';
+	loadModel(tf.loadLayersModel);
+  	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 20;
+    divOffset = 200;
+//     regFactor = 2.0;
+//     warnThre = 2.0;
+    trans = true;
+ 	startWebcam();
+});
+
+$("#start-button15").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191210_1024fx30_jvs/model-class/';
+	loadModel(tf.loadLayersModel);
+  	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 30;
+    divOffset = 200;
+//     regFactor = 2.0;
+//     warnThre = 2.0;
+    trans = true;
+ 	startWebcam();
+});
+
+$("#start-button16").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191210_1024fx20_jvs_small/model-class/';
+	loadModel(tf.loadLayersModel);
+  	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 20;
+    divOffset = 80;
+//     regFactor = 2.0;
+//     warnThre = 2.0;
+    trans = true;
+ 	startWebcam();
+});
+
+$("#start-button17").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191210_1024fx20_jvs_housenoise/model-class/';
+	loadModel(tf.loadLayersModel);
+  	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 20;
+    divOffset = 80;
+//     regFactor = 2.0;
+//     warnThre = 2.0;
+    trans = true;
+ 	startWebcam();
+});
+
+$("#start-button18").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191212_hard/model-class/';
+	loadModel(tf.loadLayersModel);
+  	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 20;
+    divOffset = 130;
+//     regFactor = 2.0;
+//     warnThre = 2.0;
+    trans = true;
+ 	startWebcam();
+});
+
+$("#start-button20").click(function(){
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191215_juf_nonoise/model-class/';
+	loadModel(tf.loadLayersModel);
+  	loadDict();
+    classify = true;
+    bufferSize = 1024;
+    fftSize = bufferSize/4;
+    predictCount = 20;
+    divOffset = 180;
+//     regFactor = 2.0;
+//     warnThre = 2.0;
+    trans = true;
+ 	startWebcam();
+});
+
+
+
+$("#start-buttonTest").click(function(){
+  prevFire = fireCount;
+  onfire();
+  prevFire = 0;
+});
+
 
 
 //-----------------------
@@ -220,6 +403,8 @@ async function loadModel(loadf) {
 	model=await loadf(modelfile);
 	console.log("model loaded.");
 	$("#console").html('<li>' + modelname + ' loaded.</li>');
+//    	startWebcam();
+    modelLoaded = true;
 };
 
 //-----------------------
@@ -227,43 +412,59 @@ async function loadModel(loadf) {
 //-----------------------
 
 var audio = {};
-var acontext = new AudioContext();
+// var acontext;// = new AudioContext();
 var mediaStream;
 function startWebcam() {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();//new AudioContext();
+//     acontext = new (window.AudioContext || window.webkitAudioContext)();//new AudioContext();
     recordingFlg = true;
 	console.log("mic start.");
 	$("#console").html(`<li>mic start.</li>`);
 
-	// Older browsers might not implement mediaDevices at all, so we set an empty object first
-	if (navigator.mediaDevices === undefined) {
-		navigator.mediaDevices = {};
-	}
+// 	// Older browsers might not implement mediaDevices at all, so we set an empty object first
+// 	if (navigator.mediaDevices === undefined) {
+// 		navigator.mediaDevices = {};
+// 	}
 
-	// Some browsers partially implement mediaDevices. We can't just assign an object
-	// with getUserMedia as it would overwrite existing properties.
-	// Here, we will just add the getUserMedia property if it's missing.
-	if (navigator.mediaDevices.getUserMedia === undefined) {
-		navigator.mediaDevices.getUserMedia = function(constraints) {
+// 	// Some browsers partially implement mediaDevices. We can't just assign an object
+// 	// with getUserMedia as it would overwrite existing properties.
+// 	// Here, we will just add the getUserMedia property if it's missing.
+// 	if (navigator.mediaDevices.getUserMedia === undefined) {
+// 		navigator.mediaDevices.getUserMedia = function(constraints) {
 
-			// First get ahold of the legacy getUserMedia, if present
-			var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+// 			// First get ahold of the legacy getUserMedia, if present
+// 			var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-			// Some browsers just don't implement it - return a rejected promise with an error
-			// to keep a consistent interface
-			if (!getUserMedia) {
-				return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
-			}
+// 			// Some browsers just don't implement it - return a rejected promise with an error
+// 			// to keep a consistent interface
+// 			if (!getUserMedia) {
+// 				return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+// 			}
 
-			// Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
-			return new Promise(function(resolve, reject) {
-				getUserMedia.call(navigator, constraints, resolve, reject);
-			});
-		}
-	}
+// 			// Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+// 			return new Promise(function(resolve, reject) {
+// 				getUserMedia.call(navigator, constraints, resolve, reject);
+// 			});
+// 		}
+// 	}
+
+    navigator.mediaDevices = navigator.mediaDevices || ((navigator.mozGetUserMedia || navigator.webkitGetUserMedia) ? {
+     getUserMedia: function(c) {
+       return new Promise(function(y, n) {
+         (navigator.mozGetUserMedia ||
+          navigator.webkitGetUserMedia).call(navigator, c, y, n);
+         });
+       }
+      } : null);
+
+    if (!navigator.mediaDevices) {
+      alert("getUserMedia() not supported.");
+      console.log("getUserMedia() not supported.");
+      return;
+    }
 
 	navigator.mediaDevices.getUserMedia({ audio: true, video: false })
 	.then(function(stream) {
-
         // 録音関連
         localMediaStream = stream;
         var scriptProcessor = audioContext.createScriptProcessor(bufferSize, 1, 1);
@@ -285,7 +486,13 @@ function startWebcam() {
 		console.log(err.name + ": " + err.message);
 	});
 
-    buf = tf.buffer([predictCount,fftSize]);
+    if (trans == false){
+      buf = tf.buffer([predictCount,fftSize]);
+//       buf2 = tf.buffer([predictCount,fftSize]);
+    }else{
+      buf = tf.buffer([fftSize,predictCount]);
+//       buf2 = tf.buffer([fftSize,predictCount]);
+    }
 }
 
 //-----------------------
@@ -308,28 +515,58 @@ async function predict(tensor){
           return b.probability-a.probability;
       }).slice(0,classNames.length);//5);
 
+//       let sc = 0;
       results.forEach(function(p){
           $("#console").append(`<li>${p.className} : ${p.probability.toFixed(6)}</li>`);
 //           console.log(p.className,p.probability.toFixed(6))
+//           sc = sc + p.probability * Number(p.className.substr(0,1));
       });
+//       enqueue(sc);
+//       $("#console").append(`<li>${average()}</li>`);
+//       console.log(results[0].className);
+      if(results[0].className.includes("💀")) {
+        prevFire++;
+        onfire();
+      }else{
+        prevFire = 0;
+//         $("#warning").empty();
+      }
     }else{
       //regression
 //       console.log(prediction[0]);
       $("#console").append(`<li>${prediction[0]}</li>`);
       if (prediction[0]*regFactor >= warnThre) {
-        $("#console").append(`crosstalk!`);
+        prevFire++;
         onfire();
+      }else{
+        prevFire = 0;
+//         $("#warning").empty();
       }
     }
-
+    showGauge();
 };
 
+showGauge = function(){
+  $("#warning").empty();
+  str = "<h1>";
+  for(var i=0;i<prevFire;i++){
+    str = str + "💀"
+  }
+  str = str + "</h1>"
+  $("#warning").append(str);
+}
+
 onfire = function(){
-//   console.log("cross talk!!");
-  sound.play();
-  setTimeout(function(){
-    //
-  },1000);
+//   console.log(prevFire);
+  if (prevFire >= fireCount){
+    $("#all").css('background-color','red');
+    //    console.log("cross talk!!");
+//     $("#warning").append(`<h1>💀</h1>`);
+    sound.play();
+    setTimeout(function(){
+    $("#all").css('background-color','white');
+    },1000);
+  }
 }
 
 //-----------------------
@@ -338,10 +575,10 @@ onfire = function(){
 
 $("#clear-button").click(function clear() {
     endRecording();
-// 	location.reload();
 });
 
 var buf;
+var buf2;
 var counter = 0;
 // var stck;// = tf.variable(tf.tensor([0]));//tf.zeros([512], tf.float32); //
 var get_fft = function(dat){
@@ -352,27 +589,51 @@ var get_fft = function(dat){
       //    console.log(fft.shape);
       return fft.dataSync();
   });
-  for (var i=0;i<fftSize;i++) buf.set(fft[i],counter,i);
+    if (trans == false){
+      for (var i=0;i<fftSize;i++) buf.set(fft[i],counter,i);
+    }else{
+      for (var i=0;i<fftSize;i++) buf.set(fft[i],i,counter);
+    }
 //   if (counter == 0) stck = fft;
 //   else stck = tf.concat([stck,fft]);
 //   console.log(stck.shape);
   counter++;
   if (counter == predictCount) {
-    counter = 0;
+//   if (counter % 10 == 0) {
+//     setBuf2(counter);
+//     counter = 0;
     const mat = buf.toTensor().expandDims().expandDims(-1);
 //     let mat = stck.reshape([predictCount,fftSize]).expandDims().expandDims(-1);
-//     console.log(stck.size)
+//      console.log(mat.shape)
     predict(mat);
 //     stck = null;
     mat.dispose();
   }
+  if (counter == predictCount) counter = 0;
 }
+
+// setBuf2 = function(counter){
+//   for (var j=0;j<counter;j++){
+//     if (trans == false){
+//       for (var i=0;i<fftSize;i++) buf2.set(buf.get(predictCount-counter + j,i),j,i);
+//     }else{
+//       for (var i=0;i<fftSize;i++) buf2.set(buf.get(i,predictCount-counter + j),i,j);
+//     }
+//   }
+//   for (var j=counter;j<predictCount;j++){
+//     if (trans == false){
+//       for (var i=0;i<fftSize;i++) buf2.set(buf.get(j - counter ,i),j,i);
+//     }else{
+//       for (var i=0;i<fftSize;i++) buf2.set(buf.get(i,j - counter),i,j);
+//     }
+//   }
+// }
 
 
 // 変数定義
 var localMediaStream = null;
 var localScriptProcessor = null;
-var audioContext = new AudioContext();
+var audioContext;// = new AudioContext();
 var audioData = []; // 録音データ
 var recordingFlg = false;
 
@@ -384,6 +645,9 @@ var predictCount = 20;
 var divOffset = 100;
 var regFactor = 1.0;
 var warnThre = 2.0;
+var trans = false;
+var prevFire = 0;
+var fireCount = 4;
 
 // キャンバス
 var canvas = document.getElementById('canvas');
@@ -419,7 +683,7 @@ var onAudioProcess = function(e) {
 //       console.log("min: " + min + ",max: " + max);
 //     }
 
-    if (recmode == false){
+    if (recmode == false && modelLoaded == true){
       get_fft(bufferData);
     }else{
       audioData.push(bufferData);
@@ -483,6 +747,8 @@ var endRecording = function() {
       let url = exportWAV(audioData);
       console.log(url);
       $("#console").append(`<a href="${url}">Download Audio</a><a>`);
+    }else{
+      location.reload();
     }
 };
 
@@ -545,6 +811,25 @@ var exportWAV = function(audioData) {
           var url = myURL.createObjectURL(audioBlob);
           return url;
 };
+
+// var qCount = 5;
+// var que = [0,0,0,0,0];
+// enqueue = function(n){
+//   que = que.push(n);
+//   if (que.length >= qCount){
+//     que = que.pop();
+//   }
+// }
+// average = function(){
+//   if (que.length == 0) return 0.0;
+//   let a = 0.0;
+//   for(var i=0;i<que.length;i++){
+//     a = a + que[i];
+//   }
+//   a = a / que.length;
+//   return a;
+// }
+
 </script>
   </body>
 </html>
