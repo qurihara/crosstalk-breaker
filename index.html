@@ -21,11 +21,11 @@
 
   <!-- PWA for android -->
   <!-- ウェブアプリマニフェストの読み込み -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="https://qurihara.github.io/crosstalk-breaker/manifest.json">
   <!-- ServiceWorkerの登録 -->
   <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('https://qurihara.github.io/crosstalk-breaker/sw.js')
       .then((reg) => {
         console.log('Service worker registered.', reg);
       });
