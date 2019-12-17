@@ -1,6 +1,6 @@
 {
   "name":"Crosstalk Detector",
-  "short_name":"CTalk",
+  "short_name":"Crosstalk",
   "icons": [{
       "src": "https://qurihara.github.io/crosstalk-breaker/icon/android/drawable-xxxhdpi/ic_launcher.png",
       "sizes":"192x192",
