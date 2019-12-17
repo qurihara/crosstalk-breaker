@@ -55,14 +55,14 @@
             <button id="start-button12" class="btn btn-outline-dark">Start fam-UT SpecAug</button>
             <button id="start-button13" class="btn btn-outline-dark">Start fam-UT SpecAug spm</button>
 -->
-<button id="start-button14" class="btn btn-outline-dark">Detect(jvs20)</button>
-<!--            <button id="start-button15" class="btn btn-outline-dark">Start jvs30</button>
-<button id="start-button16" class="btn btn-outline-dark">Start Detector(jvs20-small)</button>
-<button id="start-button17" class="btn btn-outline-dark">Start Detector(jvs20-h)</button> -->
-<button id="start-button18" class="btn btn-outline-dark">Detect(jvs20hard)</button>
-<button id="start-button20" class="btn btn-outline-dark">Detect(juf-nn)</button>
-<button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
-<button id="clear-button" class="btn btn-outline-dark">Stop</button>
+<!--            <button id="start-button14" class="btn btn-outline-dark">Detect(jvs20)</button>
+            <button id="start-button20" class="btn btn-outline-dark">Detect(juf-nn)</button>
+            <button id="start-button15" class="btn btn-outline-dark">Start jvs30</button>
+            <button id="start-button16" class="btn btn-outline-dark">Start Detector(jvs20-small)</button>
+            <button id="start-button17" class="btn btn-outline-dark">Start Detector(jvs20-h)</button> -->
+            <button id="start-button18" class="btn btn-outline-dark">Detect</button>
+            <button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
+            <button id="clear-button" class="btn btn-outline-dark">Stop</button>
           </div>
         </div>
       </div>
@@ -100,7 +100,7 @@ function changeValue(value) {
   fireCount = value;
 }
 
-//eruda.init();
+// eruda.init();
 var sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
 var modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 var classNames = [];
@@ -348,7 +348,7 @@ $("#start-button17").click(function(){
  	startWebcam();
 });
 
-$("#start-button18").click(function(){
+$("#start-button18").click(function(){ // (jvs20hard)
 	modelname = 'https://qurihara.github.io/crosstalk-breaker/191212_hard/model-class/';
 	loadModel(tf.loadLayersModel);
   	loadDict();
@@ -713,28 +713,28 @@ var analyseVoice = function() {
         }
         var f = Math.floor(i * fsDivN);  // index -> frequency;
 
-        // 500 Hz単位にy軸の線とラベル出力
-        if ((f % 500) === 0) {
-            var text = (f < 1000) ? (f + ' Hz') : ((f / 1000) + ' kHz');
-            // Draw grid (X)
-            canvasContext.fillRect(x, 0, 1, canvas.height);
-            // Draw text (X)
-            canvasContext.fillText(text, x, canvas.height);
-        }
+//         // 500 Hz単位にy軸の線とラベル出力
+//         if ((f % 500) === 0) {
+//             var text = (f < 1000) ? (f + ' Hz') : ((f / 1000) + ' kHz');
+//             // Draw grid (X)
+//             canvasContext.fillRect(x, 0, 1, canvas.height);
+//             // Draw text (X)
+//             canvasContext.fillText(text, x, canvas.height);
+//         }
     }
 
     canvasContext.stroke();
 
-    // x軸の線とラベル出力
-    var textYs = ['1.00', '0.50', '0.00'];
-    for (var i = 0, len = textYs.length; i < len; i++) {
-        var text = textYs[i];
-        var gy   = (1 - parseFloat(text)) * canvas.height;
-        // Draw grid (Y)
-        canvasContext.fillRect(0, gy, canvas.width, 1);
-        // Draw text (Y)
-        canvasContext.fillText(text, 0, gy);
-    }
+//     // x軸の線とラベル出力
+//     var textYs = ['1.00', '0.50', '0.00'];
+//     for (var i = 0, len = textYs.length; i < len; i++) {
+//         var text = textYs[i];
+//         var gy   = (1 - parseFloat(text)) * canvas.height;
+//         // Draw grid (Y)
+//         canvasContext.fillRect(0, gy, canvas.width, 1);
+//         // Draw text (Y)
+//         canvasContext.fillText(text, 0, gy);
+//     }
 }
 
 
