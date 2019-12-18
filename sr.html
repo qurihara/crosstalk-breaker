@@ -1,11 +1,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/starter-sample.css">
-    <meta charset="UTF-8">
-    <title>SpeechRate Meter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>SpeechRate Meter</title>
 
 
   <!-- PWA for iOS -->
@@ -34,43 +32,56 @@
   </head>
   <body id="all">
     <article id="article">
-      <h1 id="title" class="text-center h2">Crosstalk Detector<br></h1>
-      <div>
-        <input type="range" name="num" min="1" max="20" step="1" value="12" style="margin:  0 auto;display:block;" onchange="changeValue(this.value)">
-        <h3 id="val" class="text-center h3">12</h3>
-      </div>
-      <div class="container-b">
-        <div class="btn-toolbar">
-          <div class="btn-group" style="margin:  0 auto;">
-            <button id="start-button1" class="btn btn-outline-dark">Detect(jvs20)</button>
-            <button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
-            <button id="clear-button" class="btn btn-outline-dark">Stop</button>
-          </div>
-        </div>
-      </div>
+      <h1 id="title" class="text-center h2">SpeechRate Meter<br></h1>
       <br>
-      <div class="container-b">
-        <div class="btn-toolbar">
-        </div>
-      </div>
-      <br>
-
-      <br>
-      <canvas id="canvas" width="400" height="100" style="margin:  0 auto;display:block;" ></canvas>
-      <br>
-      <div class="container-b">
-        <div class="output">
-          <ul id="console" class="list-unstyled">
-            <li></li>
-          </ul>
-          <br>
-          <ul id="warning"></ul>
+      <div class="container">
+        <div class="row">
+            <div class="col-3">
+            </div>
+            <div class="col-6">
+              <input type="range" class="form-control-range" name="num" min="1" max="20" step="1" value="12" onchange="changeValue(this.value)">
+              <h3 id="val" class="text-center h3">12</h3>
+              <div class="d-flex justify-content-center">
+                <div class="btn-toolbar">
+                  <div class="btn-group">
+                    <button id="start-button1" class="btn btn-outline-dark">Start</button>
+                    <button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
+                    <button id="clear-button" class="btn btn-outline-dark">Stop</button>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center">
+                <canvas id="canvas" width="400" height="100"></canvas>
+              </div>
+              <div class="container-b">
+                <div class="output">
+                  <div class="d-flex justify-content-center">
+                    <ul id="console" class="list-unstyled">
+                      <li></li>
+                    </ul>
+                  </div>
+                  <br>
+                  <ul id="warning"></ul>
+                </div>
+              </div>
+              <canvas id="myChart"></canvas>
+            </div>
+            <div class="col-3">
+            </div>
         </div>
       </div>
     </article>
-    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-<!--    <script src="https://qurihara.github.io/tfjs-webcam-predct/js/tensorflow.min.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script>
 <script>
 
@@ -116,13 +127,16 @@ $("#start-button5").click(function(){
 });
 
 $("#start-button1").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191216_sr/model-reg/';
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191218_sr_ns/model-reg/';
 	loadModel(tf.loadLayersModel);
 // 	loadDict();
     classify = false;
     bufferSize = 1024;
-    fftSize = bufferSize/2;
+    fftSize = bufferSize/4;
     predictCount = 50;
+    trans = true;
+    fireCount = 12;
+    regFactor = 1.0;
 	startWebcam();
 });
 
@@ -280,8 +294,9 @@ async function predict(tensor){
     }else{
       //regression
 //       console.log(prediction[0]);
-      $("#console").append(`<li>${prediction[0]}</li>`);
-      if (prediction[0]*regFactor >= warnThre) {
+      sr = prediction[0];
+      $("#console").append(`<li><span class="display-4">${Math.round(prediction[0]*100)/100}</span></li>`);
+      if (prediction[0]*regFactor >= fireCount){//warnThre) {
         prevFire++;
         onfire();
       }else{
@@ -289,22 +304,22 @@ async function predict(tensor){
 //         $("#warning").empty();
       }
     }
-    showGauge();
+//     showGauge();
 };
 
-showGauge = function(){
-  $("#warning").empty();
-  str = "<h1>";
-  for(var i=0;i<prevFire;i++){
-    str = str + "💀"
-  }
-  str = str + "</h1>"
-  $("#warning").append(str);
-}
+// showGauge = function(){
+//   $("#warning").empty();
+//   str = "<h1>";
+//   for(var i=0;i<prevFire;i++){
+//     str = str + "💀"
+//   }
+//   str = str + "</h1>"
+//   $("#warning").append(str);
+// }
 
 onfire = function(){
 //   console.log(prevFire);
-  if (prevFire >= fireCount){
+//   if (prevFire >= fireCount){
     $("#all").css('background-color','red');
     //    console.log("cross talk!!");
 //     $("#warning").append(`<h1>💀</h1>`);
@@ -312,7 +327,7 @@ onfire = function(){
     setTimeout(function(){
     $("#all").css('background-color','white');
     },1000);
-  }
+//   }
 }
 
 //-----------------------
@@ -393,7 +408,8 @@ var regFactor = 1.0;
 var warnThre = 2.0;
 var trans = false;
 var prevFire = 0;
-var fireCount = 4;
+var fireCount = 12;
+var sr = 0;
 
 // キャンバス
 var canvas = document.getElementById('canvas');
@@ -575,6 +591,87 @@ var exportWAV = function(audioData) {
 //   a = a / que.length;
 //   return a;
 // }
+
+//chart
+var chartColors = {
+	red: 'rgb(255, 99, 132)',
+	orange: 'rgb(255, 159, 64)',
+	yellow: 'rgb(255, 205, 86)',
+	green: 'rgb(75, 192, 192)',
+	blue: 'rgb(54, 162, 235)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)'
+};
+
+function onRefresh(chart) {
+  chart.config.data.datasets[0].data.push({
+			x: Date.now(),
+			y: sr
+  });
+  chart.config.data.datasets[1].data.push({
+			x: Date.now(),
+			y: fireCount
+  });
+}
+
+var color = Chart.helpers.color;
+var config = {
+	type: 'line',
+	data: {
+		datasets: [{
+			label: 'Speech rate',
+			backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
+			borderColor: chartColors.blue,
+			fill: false,
+			cubicInterpolationMode: 'monotone',
+			data: []
+		}, {
+			label: 'Threshold',
+			backgroundColor: color(chartColors.red).alpha(0.5).rgbString(),
+			borderColor: chartColors.red,
+			fill: false,
+			lineTension: 0,
+			borderDash: [8, 4],
+			data: []
+		}]
+    },
+	options: {
+// 		title: {
+// 			display: true,
+// 			text: 'Speech rate'
+// 		},
+		scales: {
+			xAxes: [{
+				type: 'realtime',
+				realtime: {
+					duration: 20000,
+					refresh: 1000,
+					delay: 2000,
+					onRefresh: onRefresh
+				}
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'moras/sec'
+				}
+			}]
+		},
+		tooltips: {
+			mode: 'nearest',
+			intersect: false
+		},
+		hover: {
+			mode: 'nearest',
+			intersect: false
+		}
+	}
+};
+
+window.onload = function() {
+	var ctx = document.getElementById('myChart').getContext('2d');
+	window.myChart = new Chart(ctx, config);
+};
 
 </script>
   </body>
