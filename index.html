@@ -1,12 +1,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/starter-sample.css">
-    <meta charset="UTF-8">
-    <title>Crosstalk Detector</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>Crosstalk Detector</title>
 
   <!-- PWA for iOS -->
   <!-- アドレスバー等のブラウザのUIを非表示 -->
@@ -35,64 +32,71 @@
   <body id="all">
     <article id="article">
       <h1 id="title" class="text-center h2">Crosstalk Detector<br></h1>
-      <div>
-        <input type="range" name="num" min="1" max="10" step="1" value="4" style="margin:  0 auto;display:block;" onchange="changeValue(this.value)">
-        <h3 id="val" class="text-center h3">4</h3>
-      </div>
-      <div class="container-b">
-        <div class="btn-toolbar">
-          <div class="btn-group" style="margin:  0 auto;">
-<!--            <button id="start-button" class="btn btn-outline-dark">Start</button>
-            <button id="start-button2" class="btn btn-outline-dark">Start 0-1-many</button>
-            <button id="start-button3" class="btn btn-outline-dark">Start 50f</button>
-            <button id="start-button4" class="btn btn-outline-dark">Start 50f reg</button>
-            <button id="start-button6" class="btn btn-outline-dark">Start fam</button>
-            <button id="start-button7" class="btn btn-outline-dark">Start fam reg</button>
-            <button id="start-button8" class="btn btn-outline-dark">Start fam sig-reg</button>
-            <button id="start-button9" class="btn btn-outline-dark">Start fam-id</button>
-            <button id="start-button10" class="btn btn-outline-dark">Start fam-UT</button>
-            <button id="start-button11" class="btn btn-outline-dark">Start fam-UT reg</button>
-            <button id="start-button12" class="btn btn-outline-dark">Start fam-UT SpecAug</button>
-            <button id="start-button13" class="btn btn-outline-dark">Start fam-UT SpecAug spm</button>
--->
-<!--            <button id="start-button14" class="btn btn-outline-dark">Detect(jvs20)</button>
-            <button id="start-button20" class="btn btn-outline-dark">Detect(juf-nn)</button>
-            <button id="start-button15" class="btn btn-outline-dark">Start jvs30</button>
-            <button id="start-button16" class="btn btn-outline-dark">Start Detector(jvs20-small)</button>
-            <button id="start-button17" class="btn btn-outline-dark">Start Detector(jvs20-h)</button> -->
-            <button id="start-button18" class="btn btn-outline-dark">Detect</button>
-            <button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
-            <button id="clear-button" class="btn btn-outline-dark">Stop</button>
-          </div>
-        </div>
-      </div>
       <br>
-      <div class="container-b">
-        <div class="btn-toolbar">
-          <div class="btn-group" style="margin:  0 auto;">
-<!--              <button id="start-button5" class="btn btn-outline-dark">Start recording</button> -->
-          </div>
-        </div>
-      </div>
-      <br>
+      <div class="container">
+        <div class="row">
+            <div class="col-3">
+            </div>
+            <div class="col-6">
+              <input type="range" class="form-control-range" name="num" min="1" max="20" step="1" value="12" onchange="changeValue(this.value)">
+              <h3 id="val" class="text-center h3">12</h3>
+              <div class="d-flex justify-content-center">
+                <div class="btn-toolbar">
+                  <div class="btn-group">
+        <!--            <button id="start-button" class="btn btn-outline-dark">Start</button>
+                    <button id="start-button2" class="btn btn-outline-dark">Start 0-1-many</button>
+                    <button id="start-button3" class="btn btn-outline-dark">Start 50f</button>
+                    <button id="start-button4" class="btn btn-outline-dark">Start 50f reg</button>
+                    <button id="start-button6" class="btn btn-outline-dark">Start fam</button>
+                    <button id="start-button7" class="btn btn-outline-dark">Start fam reg</button>
+                    <button id="start-button8" class="btn btn-outline-dark">Start fam sig-reg</button>
+                    <button id="start-button9" class="btn btn-outline-dark">Start fam-id</button>
+                    <button id="start-button10" class="btn btn-outline-dark">Start fam-UT</button>
+                    <button id="start-button11" class="btn btn-outline-dark">Start fam-UT reg</button>
+                    <button id="start-button12" class="btn btn-outline-dark">Start fam-UT SpecAug</button>
+                    <button id="start-button13" class="btn btn-outline-dark">Start fam-UT SpecAug spm</button>
+        -->
+        <!--            <button id="start-button14" class="btn btn-outline-dark">Detect(jvs20)</button>
+                    <button id="start-button20" class="btn btn-outline-dark">Detect(juf-nn)</button>
+                    <button id="start-button15" class="btn btn-outline-dark">Start jvs30</button>
+                    <button id="start-button16" class="btn btn-outline-dark">Start Detector(jvs20-small)</button>
+                    <button id="start-button17" class="btn btn-outline-dark">Start Detector(jvs20-h)</button> -->
+                    <button id="start-button18" class="btn btn-outline-dark">Detect</button>
+                    <button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
+                    <button id="clear-button" class="btn btn-outline-dark">Stop</button>                  </div>
+                </div>
+              </div>
+              <br>
+              <br>
+              <br>
+              <div class="d-flex justify-content-center">
+                <canvas id="canvas" width="400" height="100"></canvas>
+              </div>
+              <br>
+              <div class="container-b">
+                <div class="output">
+                  <ul id="console" class="list-unstyled">
+                    <li></li>
+                  </ul>
+                  <br>
+                  <ul id="warning"></ul>
+                </div>
+              </div>
 
-      <br>
-      <canvas id="canvas" width="400" height="100" style="margin:  0 auto;display:block;" ></canvas>
-      <br>
-      <div class="container-b">
-        <div class="output">
-          <ul id="console" class="list-unstyled">
-            <li></li>
-          </ul>
-          <br>
-          <ul id="warning"></ul>
+            </div>
+            <div class="col-3">
+            </div>
         </div>
       </div>
     </article>
-    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-<!--    <script src="https://qurihara.github.io/tfjs-webcam-predct/js/tensorflow.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script> -->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script> -->
 <script>
 
 function changeValue(value) {
