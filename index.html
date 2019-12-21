@@ -5,13 +5,14 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <title>Crosstalk Detector</title>
 
+
   <!-- PWA for iOS -->
   <!-- アドレスバー等のブラウザのUIを非表示 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- default（Safariと同じ） / black（黒） / black-translucent（ステータスバーをコンテンツに含める） -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <!-- ホーム画面に表示されるアプリ名 -->
-  <meta name="apple-mobile-web-app-title" content="Crosstalk">
+  <meta name="apple-mobile-web-app-title" content="CTalk">
   <!-- ホーム画面に表示されるアプリアイコン -->
   <link rel="apple-touch-icon" href="https://qurihara.github.io/crosstalk-breaker/icon/ios/appicon-76@2x.png">
 
@@ -38,64 +39,63 @@
             <div class="col-3">
             </div>
             <div class="col-6">
-              <input type="range" class="form-control-range" name="num" min="1" max="20" step="1" value="4" onchange="changeValue(this.value)">
-              <h3 id="val" class="text-center h3">4</h3>
+              <input type="range" class="form-control-range" name="num" min="1" max="2" step="0.1" value="1.8" onchange="changeValue(this.value)">
+<!--              <h3 id="val" class="text-center h3">1.8</h3> -->
+              <div class="d-flex justify-content-center">
+              <span id="val" class="display-5">1.8</span>
+              </div>
               <div class="d-flex justify-content-center">
                 <div class="btn-toolbar">
                   <div class="btn-group">
-        <!--            <button id="start-button" class="btn btn-outline-dark">Start</button>
-                    <button id="start-button2" class="btn btn-outline-dark">Start 0-1-many</button>
-                    <button id="start-button3" class="btn btn-outline-dark">Start 50f</button>
-                    <button id="start-button4" class="btn btn-outline-dark">Start 50f reg</button>
-                    <button id="start-button6" class="btn btn-outline-dark">Start fam</button>
-                    <button id="start-button7" class="btn btn-outline-dark">Start fam reg</button>
-                    <button id="start-button8" class="btn btn-outline-dark">Start fam sig-reg</button>
-                    <button id="start-button9" class="btn btn-outline-dark">Start fam-id</button>
-                    <button id="start-button10" class="btn btn-outline-dark">Start fam-UT</button>
-                    <button id="start-button11" class="btn btn-outline-dark">Start fam-UT reg</button>
-                    <button id="start-button12" class="btn btn-outline-dark">Start fam-UT SpecAug</button>
-                    <button id="start-button13" class="btn btn-outline-dark">Start fam-UT SpecAug spm</button>
-        -->
-        <!--            <button id="start-button14" class="btn btn-outline-dark">Detect(jvs20)</button>
-                    <button id="start-button20" class="btn btn-outline-dark">Detect(juf-nn)</button>
-                    <button id="start-button15" class="btn btn-outline-dark">Start jvs30</button>
-                    <button id="start-button16" class="btn btn-outline-dark">Start Detector(jvs20-small)</button>
-                    <button id="start-button17" class="btn btn-outline-dark">Start Detector(jvs20-h)</button> -->
-                    <button id="start-button18" class="btn btn-outline-dark">Detect</button>
+                    <button id="start-button1" class="btn btn-outline-dark">Start</button>
                     <button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
-                    <button id="clear-button" class="btn btn-outline-dark">Stop</button>                  </div>
+                    <button id="clear-button" class="btn btn-outline-dark">Stop</button>
+                  </div>
                 </div>
               </div>
-              <br>
-              <br>
-              <br>
               <div class="d-flex justify-content-center">
-                <canvas id="canvas" width="400" height="100"></canvas>
+                <canvas id="canvas" width="300" height="100"></canvas>
               </div>
-              <br>
               <div class="container-b">
                 <div class="output">
-                  <ul id="console" class="list-unstyled">
-                    <li></li>
-                  </ul>
+                  <div class="d-flex justify-content-center">
+                    <ul id="console" class="list-unstyled">
+                      <li></li>
+                    </ul>
+                  </div>
                   <br>
                   <ul id="warning"></ul>
                 </div>
               </div>
-
+       <!--       <canvas id="myChart"></canvas>            -->
             </div>
             <div class="col-3">
             </div>
         </div>
       </div>
+      <div class="container">
+        <div class="row">
+            <div class="col-1">
+            </div>
+            <div class="col-10">
+              <canvas id="myChart"></canvas>
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+      </div>
     </article>
-
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
+
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script> -->
 <script>
 
@@ -104,7 +104,7 @@ function changeValue(value) {
   fireCount = value;
 }
 
-// eruda.init();
+//eruda.init();
 var sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
 var modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 var classNames = [];
@@ -140,219 +140,8 @@ $("#start-button5").click(function(){
     recmode = true;
 });
 
-$("#start-button").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
-	loadModel(tf.loadLayersModel);
-	loadDict();
-    bufferSize = 1024;
-    fftSize = bufferSize/2;
-    predictCount = 20;
-	startWebcam();
-});
 
-$("#start-button2").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise-0-1-many/model-class/';
-	loadModel(tf.loadLayersModel);
-	loadDict();
-    bufferSize = 1024;
-    fftSize = bufferSize/2;
-    predictCount = 20;
-	startWebcam();
-});
-
-$("#start-button3").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx50_wnoise/model-class/';
-	loadModel(tf.loadLayersModel);
-	loadDict();
-    bufferSize = 1024;
-    fftSize = bufferSize/2;
-    predictCount = 50;
-	startWebcam();
-});
-
-$("#start-button4").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx50_wnoise/model-reg/';
-	loadModel(tf.loadLayersModel);
-// 	loadDict();
-    classify = false;
-    bufferSize = 1024;
-    fftSize = bufferSize/2;
-    predictCount = 50;
-	startWebcam();
-});
-
-  $("#start-button6").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191128_1024fx50_family_fft_half-reduced/model-class/';
-	loadModel(tf.loadLayersModel);
-	loadDict();
-    bufferSize = 1024;
-    fftSize = bufferSize/2;
-    predictCount = 50;
-    divOffset = 200;
-	startWebcam();
-});
-
-$("#start-button7").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191128_1024fx50_family_fft_half-reduced/model-reg/';
-	loadModel(tf.loadLayersModel);
-// 	loadDict();
-    classify = false;
-    bufferSize = 1024;
-    fftSize = bufferSize/2;
-    predictCount = 50;
-    divOffset = 200;
-    warnThre = 1.5;
-	startWebcam();
-});
-
-$("#start-button8").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191127_1024fx50_family_fft-half-reduced-sigmoid/model-reg/';
-	loadModel(tf.loadLayersModel);
-// 	loadDict();
-    classify = false;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 50;
-    divOffset = 200;
-    regFactor = 2.0;
-    warnThre = 1.6;
-	startWebcam();
-});
-
-$("#start-button9").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191127_1024fx50_family_fft-half-identity/model-class/';
-	loadModel(tf.loadLayersModel);
- 	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 50;
-    divOffset = 200;
-//     regFactor = 2.0;
-//     warnThre = 1.6;
-	startWebcam();
-});
-
-$("#start-button10").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191128_1024fx20_family+UTML_fft_qua/model-class/';
-	loadModel(tf.loadLayersModel);
- 	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 20;
-    divOffset = 200;
-//     regFactor = 2.0;
-//     warnThre = 1.6;
-	startWebcam();
-});
-
-
-$("#start-button11").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191128_1024fx20_family+UTML_fft_qua/model-reg/';
-	loadModel(tf.loadLayersModel);
-//  	loadDict();
-    classify = false;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 20;
-    divOffset = 200;
-//     regFactor = 2.0;
-    warnThre = 2.0;
-	startWebcam();
-});
-
-$("#start-button12").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191204_1024fx20_specaug/model-class/';
-	loadModel(tf.loadLayersModel);
-  	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 20;
-    divOffset = 200;
-//     regFactor = 2.0;
-//     warnThre = 2.0;
-    trans = true;
- 	startWebcam();
-});
-
-$("#start-button13").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191204_1024fx20_specaug_wnoise_spm/model-class/';
-	loadModel(tf.loadLayersModel);
-  	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 20;
-    divOffset = 200;
-//     regFactor = 2.0;
-//     warnThre = 2.0;
-    trans = true;
- 	startWebcam();
-});
-
-$("#start-button14").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191209_1024fx20_jvs/model-class/';
-	loadModel(tf.loadLayersModel);
-  	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 20;
-    divOffset = 200;
-//     regFactor = 2.0;
-//     warnThre = 2.0;
-    trans = true;
- 	startWebcam();
-});
-
-$("#start-button15").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191210_1024fx30_jvs/model-class/';
-	loadModel(tf.loadLayersModel);
-  	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 30;
-    divOffset = 200;
-//     regFactor = 2.0;
-//     warnThre = 2.0;
-    trans = true;
- 	startWebcam();
-});
-
-$("#start-button16").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191210_1024fx20_jvs_small/model-class/';
-	loadModel(tf.loadLayersModel);
-  	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 20;
-    divOffset = 80;
-//     regFactor = 2.0;
-//     warnThre = 2.0;
-    trans = true;
- 	startWebcam();
-});
-
-$("#start-button17").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191210_1024fx20_jvs_housenoise/model-class/';
-	loadModel(tf.loadLayersModel);
-  	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 20;
-    divOffset = 80;
-//     regFactor = 2.0;
-//     warnThre = 2.0;
-    trans = true;
- 	startWebcam();
-});
-
-$("#start-button18").click(function(){ // (jvs20hard)
+$("#start-button1").click(function(){ // (jvs20hard)
 	modelname = 'https://qurihara.github.io/crosstalk-breaker/191212_hard/model-class/';
 	loadModel(tf.loadLayersModel);
   	loadDict();
@@ -361,27 +150,11 @@ $("#start-button18").click(function(){ // (jvs20hard)
     fftSize = bufferSize/4;
     predictCount = 20;
     divOffset = 130;
-//     regFactor = 2.0;
-//     warnThre = 2.0;
     trans = true;
- 	startWebcam();
-});
 
-$("#start-button20").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191215_juf_nonoise/model-class/';
-	loadModel(tf.loadLayersModel);
-  	loadDict();
-    classify = true;
-    bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 20;
-    divOffset = 180;
-//     regFactor = 2.0;
-//     warnThre = 2.0;
-    trans = true;
- 	startWebcam();
+  	var ctx = document.getElementById('myChart').getContext('2d');
+	window.myChart = new Chart(ctx, config);
 });
-
 
 
 $("#start-buttonTest").click(function(){
@@ -409,6 +182,8 @@ async function loadModel(loadf) {
 	$("#console").html('<li>' + modelname + ' loaded.</li>');
 //    	startWebcam();
     modelLoaded = true;
+
+    init_tfjs();
 };
 
 //-----------------------
@@ -490,6 +265,9 @@ function startWebcam() {
 		console.log(err.name + ": " + err.message);
 	});
 
+}
+
+function init_tfjs(){
     if (trans == false){
       buf = tf.buffer([predictCount,fftSize]);
 //       buf2 = tf.buffer([predictCount,fftSize]);
@@ -497,6 +275,12 @@ function startWebcam() {
       buf = tf.buffer([fftSize,predictCount]);
 //       buf2 = tf.buffer([fftSize,predictCount]);
     }
+
+    //hot start
+    const mat = buf.toTensor().expandDims().expandDims(-1);
+    predict(mat);
+    mat.dispose();
+	startWebcam();
 }
 
 //-----------------------
@@ -513,33 +297,41 @@ async function predict(tensor){
                   .map(function(p,i){
       return {
           probability: p,
-          className: classNames[i]
+          className: classNames[i],
+          expectation: p*i,
+          num: i
       };
       }).sort(function(a,b){
           return b.probability-a.probability;
       }).slice(0,classNames.length);//5);
 
-//       let sc = 0;
+      sr = 0;
       results.forEach(function(p){
-          $("#console").append(`<li>${p.className} : ${p.probability.toFixed(6)}</li>`);
-//           console.log(p.className,p.probability.toFixed(6))
-//           sc = sc + p.probability * Number(p.className.substr(0,1));
+//           $("#console").append(`<li>${p.className} : ${p.probability.toFixed(6)}</li>`);
+          sr = sr + p.expectation;
       });
-//       enqueue(sc);
-//       $("#console").append(`<li>${average()}</li>`);
-//       console.log(results[0].className);
-      if(results[0].className.includes("💀")) {
-        prevFire++;
+//       enqueue(sr);
+      enqueue(results[0].num);
+//       $("#console").append(`<li><span class="display-4">${Math.round(sr*100)/100}</span></li>`);
+//       $("#console").append(`<li><span class="display-4">${results[0].className}</span></li>`);
+      $("#console").append(`<li><span class="display-4">${Math.round(average()*100)/100}</span></li>`);
+      if (average() >= fireCount){
         onfire();
-      }else{
-        prevFire = 0;
-//         $("#warning").empty();
       }
+//       if(results[0].className.includes("💀")) {
+//         prevFire++;
+//         onfire();
+//       }else{
+//         prevFire = 0;
+// //         $("#warning").empty();
+//       }
     }else{
       //regression
 //       console.log(prediction[0]);
-      $("#console").append(`<li>${prediction[0]}</li>`);
-      if (prediction[0]*regFactor >= warnThre) {
+      sr = prediction[0];
+      enqueue(sr);
+      $("#console").append(`<li><span class="display-4">${Math.round(prediction[0]*100)/100}</span></li>`);
+      if (average() >= fireCount){//warnThre) {
         prevFire++;
         onfire();
       }else{
@@ -547,30 +339,31 @@ async function predict(tensor){
 //         $("#warning").empty();
       }
     }
-    showGauge();
+//     showGauge();
 };
 
-showGauge = function(){
-  $("#warning").empty();
-  str = "<h1>";
-  for(var i=0;i<prevFire;i++){
-    str = str + "💀"
-  }
-  str = str + "</h1>"
-  $("#warning").append(str);
-}
+// showGauge = function(){
+//   $("#warning").empty();
+//   str = "<h1>";
+//   for(var i=0;i<prevFire;i++){
+//     str = str + "💀"
+//   }
+//   str = str + "</h1>"
+//   $("#warning").append(str);
+// }
 
 onfire = function(){
 //   console.log(prevFire);
-  if (prevFire >= fireCount){
+//   if (prevFire >= fireCount){
     $("#all").css('background-color','red');
     //    console.log("cross talk!!");
 //     $("#warning").append(`<h1>💀</h1>`);
+    //$.get( "https://obniz.io/events/43/1UE6fLGGBg3PYulXf3JE9BLBlP9C7xm0/run");
     sound.play();
     setTimeout(function(){
     $("#all").css('background-color','white');
     },1000);
-  }
+//   }
 }
 
 //-----------------------
@@ -651,7 +444,8 @@ var regFactor = 1.0;
 var warnThre = 2.0;
 var trans = false;
 var prevFire = 0;
-var fireCount = 4;
+var fireCount = 1.8;
+var sr = 0;
 
 // キャンバス
 var canvas = document.getElementById('canvas');
@@ -693,9 +487,15 @@ var onAudioProcess = function(e) {
       audioData.push(bufferData);
     }
 
-    // 波形を解析
-    analyseVoice();
+    waCounter++;
+    if(waCounter % waCountFrq == 0){
+      // 波形を解析
+      analyseVoice();
+      waCounter=0;
+    }
 };
+var waCounter = 0;
+var waCountFrq = 3;
 
 // 解析用処理
 var analyseVoice = function() {
@@ -715,8 +515,7 @@ var analyseVoice = function() {
         } else {
             canvasContext.lineTo(x, y);
         }
-        var f = Math.floor(i * fsDivN);  // index -> frequency;
-
+//         var f = Math.floor(i * fsDivN);  // index -> frequency;
 //         // 500 Hz単位にy軸の線とラベル出力
 //         if ((f % 500) === 0) {
 //             var text = (f < 1000) ? (f + ' Hz') : ((f / 1000) + ' kHz');
@@ -816,23 +615,110 @@ var exportWAV = function(audioData) {
           return url;
 };
 
-// var qCount = 5;
-// var que = [0,0,0,0,0];
-// enqueue = function(n){
-//   que = que.push(n);
-//   if (que.length >= qCount){
-//     que = que.pop();
-//   }
-// }
-// average = function(){
-//   if (que.length == 0) return 0.0;
-//   let a = 0.0;
-//   for(var i=0;i<que.length;i++){
-//     a = a + que[i];
-//   }
-//   a = a / que.length;
-//   return a;
-// }
+var qCount = 4;
+var que = [0,0,0,0];
+enqueue = function(n){
+  que.push(n);
+  if (que.length > qCount){
+    que.shift();
+  }
+}
+average = function(){
+  if (que.length == 0) return 0.0;
+  let a = 0.0;
+  for(var i=0;i<que.length;i++){
+    a = a + que[i];
+  }
+  a = a / que.length;
+  return a;
+}
+
+//chart
+var chartColors = {
+	red: 'rgb(255, 99, 132)',
+	orange: 'rgb(255, 159, 64)',
+	yellow: 'rgb(255, 205, 86)',
+	green: 'rgb(75, 192, 192)',
+	blue: 'rgb(54, 162, 235)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)'
+};
+
+function onRefresh(chart) {
+  chart.config.data.datasets[0].data.push({
+			x: Date.now(),
+			y: sr
+  });
+  chart.config.data.datasets[1].data.push({
+			x: Date.now(),
+			y: average()
+  });
+  chart.config.data.datasets[2].data.push({
+			x: Date.now(),
+			y: fireCount
+  });
+}
+
+var color = Chart.helpers.color;
+var config = {
+	type: 'line',
+	data: {
+		datasets: [{
+			label: 'Now',
+			backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
+			borderColor: chartColors.blue,
+			fill: false,
+			cubicInterpolationMode: 'monotone',
+			data: []
+		}, {
+			label: 'Ave.',
+			backgroundColor: color(chartColors.green).alpha(0.5).rgbString(),
+			borderColor: chartColors.green,
+			fill: false,
+			cubicInterpolationMode: 'monotone',
+			data: []
+		}, {
+			label: 'Thre.',
+			backgroundColor: color(chartColors.red).alpha(0.5).rgbString(),
+			borderColor: chartColors.red,
+			fill: false,
+			lineTension: 0,
+			borderDash: [8, 4],
+			data: []
+		}]
+    },
+	options: {
+// 		title: {
+// 			display: true,
+// 			text: 'Speech rate'
+// 		},
+		scales: {
+			xAxes: [{
+				type: 'realtime',
+				realtime: {
+					duration: 20000,
+					refresh: 1000,
+					delay: 2000,
+					onRefresh: onRefresh
+				}
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: '#Speakers'
+				}
+			}]
+		},
+		tooltips: {
+			mode: 'nearest',
+			intersect: false
+		},
+		hover: {
+			mode: 'nearest',
+			intersect: false
+		}
+	}
+};
 
 </script>
   </body>
