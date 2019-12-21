@@ -310,8 +310,8 @@ async function predict(tensor){
 //           $("#console").append(`<li>${p.className} : ${p.probability.toFixed(6)}</li>`);
           sr = sr + p.expectation;
       });
-//       enqueue(sr);
-      enqueue(results[0].num);
+      enqueue(sr);
+//      enqueue(results[0].num);
 //       $("#console").append(`<li><span class="display-4">${Math.round(sr*100)/100}</span></li>`);
 //       $("#console").append(`<li><span class="display-4">${results[0].className}</span></li>`);
       $("#console").append(`<li><span class="display-4">${Math.round(average()*100)/100}</span></li>`);
