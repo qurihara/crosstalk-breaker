@@ -312,9 +312,9 @@ async function predict(tensor){
       });
       enqueue(sr);
 //      enqueue(results[0].num);
-//       $("#console").append(`<li><span class="display-4">${Math.round(sr*100)/100}</span></li>`);
+      $("#console").append(`<li><span class="display-4">${Math.round(sr*100)/100}</span></li>`);
 //       $("#console").append(`<li><span class="display-4">${results[0].className}</span></li>`);
-      $("#console").append(`<li><span class="display-4">${Math.round(average()*100)/100}</span></li>`);
+//       $("#console").append(`<li><span class="display-4">${Math.round(average()*100)/100}</span></li>`);
       if (average() >= fireCount){
         onfire();
       }
@@ -358,7 +358,7 @@ onfire = function(){
     $("#all").css('background-color','red');
     //    console.log("cross talk!!");
 //     $("#warning").append(`<h1>💀</h1>`);
-    //$.get( "https://obniz.io/events/43/1UE6fLGGBg3PYulXf3JE9BLBlP9C7xm0/run");
+    $.get( "https://obniz.io/events/43/1UE6fLGGBg3PYulXf3JE9BLBlP9C7xm0/run");
     sound.play();
     setTimeout(function(){
     $("#all").css('background-color','white');
