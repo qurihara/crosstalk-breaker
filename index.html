@@ -46,11 +46,11 @@
               </div>
               <div class="d-flex justify-content-center">
                 <div class="btn-toolbar">
-                  <div class="btn-group">
-                    <button id="start-button1" class="btn btn-outline-dark">Start</button>
-                    <button id="start-buttonTest" class="btn btn-outline-dark">Test</button>
-                    <button id="clear-button" class="btn btn-outline-dark">Stop</button>
-                  </div>
+<!--                  <div class="btn-group"> -->
+                    <button id="start-button1" class="btn btn-primary mb-2">Start</button>
+                    <button id="start-buttonTest" class="btn btn-primary mb-2">Test</button>
+                    <button id="clear-button" class="btn btn-primary mb-2">Stop</button>
+<!--                  </div> -->
                 </div>
               </div>
               <div class="d-flex justify-content-center">
@@ -84,11 +84,26 @@
             </div>
         </div>
       </div>
+      <div class="d-flex justify-content-center">
+        <form class="form-inline">
+          <label class="my-1 mr-2" for="soundurl">Alert Sound</label>
+          <input type="text" class="form-control mb-2 mr-sm-2" id="soundurl" placeholder="Sound URL on alert">
+          <button type="button" class="btn btn-primary mb-2" id="soundbutton">Apply</button>
+        </form>
+      </div>
+      <div class="d-flex justify-content-center">
+        <form class="form-inline">
+          <label class="my-1 mr-2" for="webhookurl">Webhook</label>
+          <input type="text" class="form-control mb-2 mr-sm-2" id="webhookurl" placeholder="Webhook URL on alert">
+          <button type="button" class="btn btn-primary mb-2" id="webhookbutton">Apply</button>
+        </form>
+      </div>
     </article>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
 
@@ -105,7 +120,8 @@ function changeValue(value) {
 }
 
 //eruda.init();
-var sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
+var sound;// = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Power%20Down.mp3");
+//var sound; //= new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
 var modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 var classNames = [];
 var modelLoaded = false;
@@ -135,9 +151,8 @@ function success(data) {
 //-----------------------
 
 var recmode = false;
-$("#start-button5").click(function(){
-	startWebcam();
-    recmode = true;
+$("#clear-button").click(function clear() {
+   location.reload();
 });
 
 
@@ -358,21 +373,20 @@ onfire = function(){
     $("#all").css('background-color','red');
     //    console.log("cross talk!!");
 //     $("#warning").append(`<h1>💀</h1>`);
-    $.get( "https://obniz.io/events/43/1UE6fLGGBg3PYulXf3JE9BLBlP9C7xm0/run");
-    sound.play();
+    if (wfurl != ''){
+      $.get(wfurl);
+//       console.log("webhook");
+    }
+    if (sound){
+      sound.play();
+    }
+
     setTimeout(function(){
     $("#all").css('background-color','white');
     },1000);
 //   }
 }
 
-//-----------------------
-// clear button event
-//-----------------------
-
-$("#clear-button").click(function clear() {
-    endRecording();
-});
 
 var buf;
 var buf2;
@@ -446,6 +460,7 @@ var trans = false;
 var prevFire = 0;
 var fireCount = 1.8;
 var sr = 0;
+var wfurl = "";
 
 // キャンバス
 var canvas = document.getElementById('canvas');
@@ -499,7 +514,7 @@ var waCountFrq = 3;
 
 // 解析用処理
 var analyseVoice = function() {
-    var fsDivN = audioContext.sampleRate / audioAnalyser.fftSize;
+    var fsDivN = audioContext.sampleRate/2 / audioAnalyser.fftSize;
     var spectrums = new Uint8Array(audioAnalyser.frequencyBinCount);
     audioAnalyser.getByteFrequencyData(spectrums);
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
@@ -539,81 +554,6 @@ var analyseVoice = function() {
 //         canvasContext.fillText(text, 0, gy);
 //     }
 }
-
-
-// 解析終了
-var endRecording = function() {
-    recordingFlg = false;
-
-    if(recmode ===true){
-//       console.log(audioData);
-      let url = exportWAV(audioData);
-      console.log(url);
-      $("#console").append(`<a href="${url}">Download Audio</a><a>`);
-    }else{
-      location.reload();
-    }
-};
-
-var exportWAV = function(audioData) {
-          var encodeWAV = function(samples, sampleRate) {
-            var buffer = new ArrayBuffer(44 + samples.length * 2);
-            var view = new DataView(buffer);
-
-            var writeString = function(view, offset, string) {
-              for (var i = 0; i < string.length; i++){
-                view.setUint8(offset + i, string.charCodeAt(i));
-              }
-            };
-
-            var floatTo16BitPCM = function(output, offset, input) {
-              for (var i = 0; i < input.length; i++, offset += 2){
-                var s = Math.max(-1, Math.min(1, input[i]));
-                output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-              }
-            };
-
-            writeString(view, 0, 'RIFF');  // RIFFヘッダ
-            view.setUint32(4, 32 + samples.length * 2, true); // これ以降のファイルサイズ
-            writeString(view, 8, 'WAVE'); // WAVEヘッダ
-            writeString(view, 12, 'fmt '); // fmtチャンク
-            view.setUint32(16, 16, true); // fmtチャンクのバイト数
-            view.setUint16(20, 1, true); // フォーマットID
-            view.setUint16(22, 1, true); // チャンネル数
-            view.setUint32(24, sampleRate, true); // サンプリングレート
-            view.setUint32(28, sampleRate * 2, true); // データ速度
-            view.setUint16(32, 2, true); // ブロックサイズ
-            view.setUint16(34, 16, true); // サンプルあたりのビット数
-            writeString(view, 36, 'data'); // dataチャンク
-            view.setUint32(40, samples.length * 2, true); // 波形データのバイト数
-            floatTo16BitPCM(view, 44, samples); // 波形データ
-
-            return view;
-          };
-
-          var mergeBuffers = function(audioData) {
-            var sampleLength = 0;
-            for (var i = 0; i < audioData.length; i++) {
-              sampleLength += audioData[i].length;
-            }
-            var samples = new Float32Array(sampleLength);
-            var sampleIdx = 0;
-            for (var i = 0; i < audioData.length; i++) {
-              for (var j = 0; j < audioData[i].length; j++) {
-                samples[sampleIdx] = audioData[i][j];
-                sampleIdx++;
-              }
-            }
-            return samples;
-          };
-
-          var dataview = encodeWAV(mergeBuffers(audioData), audioContext.sampleRate);
-          var audioBlob = new Blob([dataview], { type: 'audio/wav' });
-
-          var myURL = window.URL || window.webkitURL;
-          var url = myURL.createObjectURL(audioBlob);
-          return url;
-};
 
 var qCount = 4;
 var que = [0,0,0,0];
@@ -678,7 +618,7 @@ var config = {
 			cubicInterpolationMode: 'monotone',
 			data: []
 		}, {
-			label: 'Thre.',
+			label: 'Limit',
 			backgroundColor: color(chartColors.red).alpha(0.5).rgbString(),
 			borderColor: chartColors.red,
 			fill: false,
@@ -719,6 +659,50 @@ var config = {
 		}
 	}
 };
+
+window.onload = function() {
+  var cookie = $.cookie('webhookurl');
+  if(cookie){
+    console.log(cookie);
+    $('#webhookurl').val(cookie);
+  }else{
+//     console.log("no cookie");
+  }
+
+  var cookie = $.cookie('soundurl');
+  if(cookie){
+    console.log(cookie);
+    $('#soundurl').val(cookie);
+  }else{
+    console.log("no cookie");
+  }
+
+}
+$("#webhookbutton").click(function(){
+  wfurl = $('#webhookurl').val()
+  console.log(wfurl);
+  if (wfurl != ''){
+    $.cookie('webhookurl',wfurl);
+  }else{
+    console.log("no url");
+  }
+  $('#webhookurl').prop('disabled', true);
+  $('#webhookbutton').prop('disabled', true);
+});
+
+$("#soundbutton").click(function(){
+  let surl = $('#soundurl').val()
+  sound = new Audio(surl);
+  console.log(surl);
+  if (surl != ''){
+    $.cookie('soundurl',surl);
+  }else{
+    console.log("no url. default loaded.");
+    sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Power%20Down.mp3");
+  }
+  $('#soundurl').prop('disabled', true);
+  $('#soundbutton').prop('disabled', true);
+});
 
 </script>
   </body>
