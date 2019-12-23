@@ -12,18 +12,18 @@
   <!-- default（Safariと同じ） / black（黒） / black-translucent（ステータスバーをコンテンツに含める） -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <!-- ホーム画面に表示されるアプリ名 -->
-  <meta name="apple-mobile-web-app-title" content="CTalk">
+  <meta name="apple-mobile-web-app-title" content="SpeechRate">
   <!-- ホーム画面に表示されるアプリアイコン -->
   <link rel="apple-touch-icon" href="https://qurihara.github.io/crosstalk-breaker/icon/ios/appicon-76@2x.png">
 
 
   <!-- PWA for android -->
   <!-- ウェブアプリマニフェストの読み込み -->
-  <link rel="manifest" href="https://qurihara.github.io/crosstalk-breaker/manifest.json">
+  <link rel="manifest" href="https://qurihara.github.io/crosstalk-breaker/manifest_sr.json">
   <!-- ServiceWorkerの登録 -->
   <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('https://qurihara.github.io/crosstalk-breaker/sw.js')
+    navigator.serviceWorker.register('https://qurihara.github.io/crosstalk-breaker/sw_sr.js')
       .then((reg) => {
         console.log('Service worker registered.', reg);
       });
@@ -39,8 +39,8 @@
             <div class="col-3">
             </div>
             <div class="col-6">
-              <input type="range" class="form-control-range" name="num" min="1" max="20" step="1" value="12" onchange="changeValue(this.value)">
-              <h3 id="val" class="text-center h3">12</h3>
+              <input type="range" class="form-control-range" name="num" min="1" max="20" step="0.5" value="10" onchange="changeValue(this.value)">
+              <h3 id="val" class="text-center h3">10</h3>
               <div class="d-flex justify-content-center">
                 <div class="btn-toolbar">
                   <div class="btn-group">
@@ -51,7 +51,7 @@
                 </div>
               </div>
               <div class="d-flex justify-content-center">
-                <canvas id="canvas" width="400" height="100"></canvas>
+                <canvas id="canvas" width="300" height="100"></canvas>
               </div>
               <div class="container-b">
                 <div class="output">
@@ -64,17 +64,43 @@
                   <ul id="warning"></ul>
                 </div>
               </div>
-              <canvas id="myChart"></canvas>
+       <!--       <canvas id="myChart"></canvas>            -->
             </div>
             <div class="col-3">
             </div>
         </div>
+      </div>
+      <div class="container">
+        <div class="row">
+            <div class="col-1">
+            </div>
+            <div class="col-10">
+              <canvas id="myChart"></canvas>
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center">
+        <form class="form-inline">
+          <label class="my-1 mr-2" for="soundurl">Alert Sound</label>
+          <input type="text" class="form-control mb-2 mr-sm-2" id="soundurl" placeholder="Sound URL on alert">
+          <button type="button" class="btn btn-primary mb-2" id="soundbutton">Apply</button>
+        </form>
+      </div>
+      <div class="d-flex justify-content-center">
+        <form class="form-inline">
+          <label class="my-1 mr-2" for="webhookurl">Webhook</label>
+          <input type="text" class="form-control mb-2 mr-sm-2" id="webhookurl" placeholder="Webhook URL on alert">
+          <button type="button" class="btn btn-primary mb-2" id="webhookbutton">Apply</button>
+        </form>
       </div>
     </article>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
 
@@ -91,7 +117,8 @@ function changeValue(value) {
 }
 
 eruda.init();
-var sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
+var sound;// = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Power%20Down.mp3");
+//var sound; //= new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
 var modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 var classNames = [];
 var modelLoaded = false;
@@ -121,23 +148,28 @@ function success(data) {
 //-----------------------
 
 var recmode = false;
-$("#start-button5").click(function(){
-	startWebcam();
-    recmode = true;
+$("#clear-button").click(function clear() {
+   location.reload();
 });
 
+
 $("#start-button1").click(function(){
-	modelname = 'https://qurihara.github.io/crosstalk-breaker/191218_sr_ns/model-reg/';
+// 	modelname = 'https://qurihara.github.io/crosstalk-breaker/191218_sr_s/model-reg/';
+	modelname = 'https://qurihara.github.io/crosstalk-breaker/191222_60/model-reg/';
 	loadModel(tf.loadLayersModel);
 // 	loadDict();
     classify = false;
     bufferSize = 1024;
-    fftSize = bufferSize/4;
-    predictCount = 50;
+    fftSize = bufferSize/8;//4;
+    predictCount = 60;
     trans = true;
     fireCount = 12;
     regFactor = 1.0;
-	startWebcam();
+    divOffset = 125.55546;
+
+  	var ctx = document.getElementById('myChart').getContext('2d');
+	window.myChart = new Chart(ctx, config);
+
 });
 
 $("#start-buttonTest").click(function(){
@@ -165,6 +197,8 @@ async function loadModel(loadf) {
 	$("#console").html('<li>' + modelname + ' loaded.</li>');
 //    	startWebcam();
     modelLoaded = true;
+
+    init_tfjs();
 };
 
 //-----------------------
@@ -246,6 +280,9 @@ function startWebcam() {
 		console.log(err.name + ": " + err.message);
 	});
 
+}
+
+function init_tfjs(){
     if (trans == false){
       buf = tf.buffer([predictCount,fftSize]);
 //       buf2 = tf.buffer([predictCount,fftSize]);
@@ -253,6 +290,12 @@ function startWebcam() {
       buf = tf.buffer([fftSize,predictCount]);
 //       buf2 = tf.buffer([fftSize,predictCount]);
     }
+
+    //hot start
+    const mat = buf.toTensor().expandDims().expandDims(-1);
+    predict(mat);
+    mat.dispose();
+	startWebcam();
 }
 
 //-----------------------
@@ -295,8 +338,9 @@ async function predict(tensor){
       //regression
 //       console.log(prediction[0]);
       sr = prediction[0];
+      enqueue(sr);
       $("#console").append(`<li><span class="display-4">${Math.round(prediction[0]*100)/100}</span></li>`);
-      if (prediction[0]*regFactor >= fireCount){//warnThre) {
+      if (average() >= fireCount){//warnThre) {
         prevFire++;
         onfire();
       }else{
@@ -318,25 +362,29 @@ async function predict(tensor){
 // }
 
 onfire = function(){
+    if (alerting == true) {
+      console.log("stil alerting");
+      return;
+    }
+    alerting = true;
 //   console.log(prevFire);
 //   if (prevFire >= fireCount){
     $("#all").css('background-color','red');
     //    console.log("cross talk!!");
 //     $("#warning").append(`<h1>💀</h1>`);
-    sound.play();
+    if (wfurl != ''){
+      $.get(wfurl);
+//       console.log("webhook");
+    }
+    if (sound){
+      sound.play();
+    }
     setTimeout(function(){
-    $("#all").css('background-color','white');
+      $("#all").css('background-color','white');
+      alerting = false;
     },1000);
 //   }
 }
-
-//-----------------------
-// clear button event
-//-----------------------
-
-$("#clear-button").click(function clear() {
-    endRecording();
-});
 
 var buf;
 var buf2;
@@ -408,8 +456,10 @@ var regFactor = 1.0;
 var warnThre = 2.0;
 var trans = false;
 var prevFire = 0;
-var fireCount = 12;
+var fireCount = 10;
 var sr = 0;
+var wfurl = "";
+var alerting = false;
 
 // キャンバス
 var canvas = document.getElementById('canvas');
@@ -451,13 +501,19 @@ var onAudioProcess = function(e) {
       audioData.push(bufferData);
     }
 
-    // 波形を解析
-    analyseVoice();
+    waCounter++;
+    if(waCounter % waCountFrq == 0){
+      // 波形を解析
+      analyseVoice();
+      waCounter=0;
+    }
 };
+var waCounter = 0;
+var waCountFrq = 3;
 
 // 解析用処理
 var analyseVoice = function() {
-    var fsDivN = audioContext.sampleRate / audioAnalyser.fftSize;
+    var fsDivN = audioContext.sampleRate /2 / audioAnalyser.fftSize;
     var spectrums = new Uint8Array(audioAnalyser.frequencyBinCount);
     audioAnalyser.getByteFrequencyData(spectrums);
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
@@ -473,8 +529,7 @@ var analyseVoice = function() {
         } else {
             canvasContext.lineTo(x, y);
         }
-        var f = Math.floor(i * fsDivN);  // index -> frequency;
-
+//         var f = Math.floor(i * fsDivN);  // index -> frequency;
 //         // 500 Hz単位にy軸の線とラベル出力
 //         if ((f % 500) === 0) {
 //             var text = (f < 1000) ? (f + ' Hz') : ((f / 1000) + ' kHz');
@@ -499,98 +554,23 @@ var analyseVoice = function() {
 //     }
 }
 
-
-// 解析終了
-var endRecording = function() {
-    recordingFlg = false;
-
-    if(recmode ===true){
-//       console.log(audioData);
-      let url = exportWAV(audioData);
-      console.log(url);
-      $("#console").append(`<a href="${url}">Download Audio</a><a>`);
-    }else{
-      location.reload();
-    }
-};
-
-var exportWAV = function(audioData) {
-          var encodeWAV = function(samples, sampleRate) {
-            var buffer = new ArrayBuffer(44 + samples.length * 2);
-            var view = new DataView(buffer);
-
-            var writeString = function(view, offset, string) {
-              for (var i = 0; i < string.length; i++){
-                view.setUint8(offset + i, string.charCodeAt(i));
-              }
-            };
-
-            var floatTo16BitPCM = function(output, offset, input) {
-              for (var i = 0; i < input.length; i++, offset += 2){
-                var s = Math.max(-1, Math.min(1, input[i]));
-                output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-              }
-            };
-
-            writeString(view, 0, 'RIFF');  // RIFFヘッダ
-            view.setUint32(4, 32 + samples.length * 2, true); // これ以降のファイルサイズ
-            writeString(view, 8, 'WAVE'); // WAVEヘッダ
-            writeString(view, 12, 'fmt '); // fmtチャンク
-            view.setUint32(16, 16, true); // fmtチャンクのバイト数
-            view.setUint16(20, 1, true); // フォーマットID
-            view.setUint16(22, 1, true); // チャンネル数
-            view.setUint32(24, sampleRate, true); // サンプリングレート
-            view.setUint32(28, sampleRate * 2, true); // データ速度
-            view.setUint16(32, 2, true); // ブロックサイズ
-            view.setUint16(34, 16, true); // サンプルあたりのビット数
-            writeString(view, 36, 'data'); // dataチャンク
-            view.setUint32(40, samples.length * 2, true); // 波形データのバイト数
-            floatTo16BitPCM(view, 44, samples); // 波形データ
-
-            return view;
-          };
-
-          var mergeBuffers = function(audioData) {
-            var sampleLength = 0;
-            for (var i = 0; i < audioData.length; i++) {
-              sampleLength += audioData[i].length;
-            }
-            var samples = new Float32Array(sampleLength);
-            var sampleIdx = 0;
-            for (var i = 0; i < audioData.length; i++) {
-              for (var j = 0; j < audioData[i].length; j++) {
-                samples[sampleIdx] = audioData[i][j];
-                sampleIdx++;
-              }
-            }
-            return samples;
-          };
-
-          var dataview = encodeWAV(mergeBuffers(audioData), audioContext.sampleRate);
-          var audioBlob = new Blob([dataview], { type: 'audio/wav' });
-
-          var myURL = window.URL || window.webkitURL;
-          var url = myURL.createObjectURL(audioBlob);
-          return url;
-};
-
-// var qCount = 5;
-// var que = [0,0,0,0,0];
-// enqueue = function(n){
-//   que = que.push(n);
-//   if (que.length >= qCount){
-//     que = que.pop();
-//   }
-// }
-// average = function(){
-//   if (que.length == 0) return 0.0;
-//   let a = 0.0;
-//   for(var i=0;i<que.length;i++){
-//     a = a + que[i];
-//   }
-//   a = a / que.length;
-//   return a;
-// }
+var qCount = 10;
+var que = [];//0,0,0,0,0];
+enqueue = function(n){
+  que.push(n);
+  if (que.length > qCount){
+    que.shift();
+  }
+}
+average = function(){
+  if (que.length == 0) return 0.0;
+  let a = 0.0;
+  for(var i=0;i<que.length;i++){
+    a = a + que[i];
+  }
+  a = a / que.length;
+  return a;
+}
 
 //chart
 var chartColors = {
@@ -610,6 +590,10 @@ function onRefresh(chart) {
   });
   chart.config.data.datasets[1].data.push({
 			x: Date.now(),
+			y: average()
+  });
+  chart.config.data.datasets[2].data.push({
+			x: Date.now(),
 			y: fireCount
   });
 }
@@ -619,14 +603,21 @@ var config = {
 	type: 'line',
 	data: {
 		datasets: [{
-			label: 'Speech rate',
+			label: 'Rate',
 			backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
 			borderColor: chartColors.blue,
 			fill: false,
 			cubicInterpolationMode: 'monotone',
 			data: []
 		}, {
-			label: 'Threshold',
+			label: 'Ave.',
+			backgroundColor: color(chartColors.green).alpha(0.5).rgbString(),
+			borderColor: chartColors.green,
+			fill: false,
+			cubicInterpolationMode: 'monotone',
+			data: []
+		}, {
+			label: 'Limit',
 			backgroundColor: color(chartColors.red).alpha(0.5).rgbString(),
 			borderColor: chartColors.red,
 			fill: false,
@@ -668,10 +659,52 @@ var config = {
 	}
 };
 
+  //
+
 window.onload = function() {
-	var ctx = document.getElementById('myChart').getContext('2d');
-	window.myChart = new Chart(ctx, config);
-};
+  var cookie = $.cookie('webhookurl');
+  if(cookie){
+    console.log(cookie);
+    $('#webhookurl').val(cookie);
+  }else{
+//     console.log("no cookie");
+  }
+
+  var cookie = $.cookie('soundurl');
+  if(cookie){
+    console.log(cookie);
+    $('#soundurl').val(cookie);
+  }else{
+    console.log("no cookie");
+  }
+
+}
+$("#webhookbutton").click(function(){
+  wfurl = $('#webhookurl').val()
+  console.log(wfurl);
+  if (wfurl != ''){
+    $.cookie('webhookurl',wfurl);
+  }else{
+    console.log("no url");
+  }
+  $('#webhookurl').prop('disabled', true);
+  $('#webhookbutton').prop('disabled', true);
+});
+
+$("#soundbutton").click(function(){
+  let surl = $('#soundurl').val()
+  sound = new Audio(surl);
+  console.log(surl);
+  if (surl != ''){
+    $.cookie('soundurl',surl);
+  }else{
+    console.log("no url. default loaded.");
+    sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Power%20Down.mp3");
+  }
+  $('#soundurl').prop('disabled', true);
+  $('#soundbutton').prop('disabled', true);
+});
+
 
 </script>
   </body>
