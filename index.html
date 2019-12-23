@@ -368,6 +368,11 @@ async function predict(tensor){
 // }
 
 onfire = function(){
+    if (alerting == true) {
+      console.log("stil alerting");
+      return;
+    }
+    alerting = true;
 //   console.log(prevFire);
 //   if (prevFire >= fireCount){
     $("#all").css('background-color','red');
@@ -382,7 +387,8 @@ onfire = function(){
     }
 
     setTimeout(function(){
-    $("#all").css('background-color','white');
+      $("#all").css('background-color','white');
+      alerting = false;
     },1000);
 //   }
 }
@@ -461,6 +467,7 @@ var prevFire = 0;
 var fireCount = 1.8;
 var sr = 0;
 var wfurl = "";
+var alerting = false;
 
 // キャンバス
 var canvas = document.getElementById('canvas');
