@@ -86,9 +86,15 @@
       </div>
       <div class="d-flex justify-content-center">
         <form class="form-inline">
-          <label class="my-1 mr-2" for="soundurl">Alert Sound</label>
-          <input type="text" class="form-control mb-2 mr-sm-2" id="soundurl" placeholder="Sound URL on alert">
-          <button type="button" class="btn btn-primary mb-2" id="soundbutton">Apply</button>
+          <label class="my-1 mr-2" for="soundurl">Sound</label>
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary active mb-2">
+              <input type="radio" name="sound" id="mute" autocomplete="off" checked>Mute
+            </label>
+            <label class="btn btn-primary mb-2">
+              <input type="radio" name="sound" id="soundenabled" autocomplete="off">Enabled
+            </label>
+          </div>
         </form>
       </div>
       <div class="d-flex justify-content-center">
@@ -120,7 +126,10 @@ function changeValue(value) {
 }
 
 //eruda.init();
-var sound;// = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Power%20Down.mp3");
+
+//var sound;
+var sound = new Audio("https://qurihara.github.io/crosstalk-breaker/sound/se_maoudamashii_onepoint13.mp3");
+// var sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Power%20Down.mp3");
 //var sound; //= new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Coin.mp3");
 var modelname = 'https://qurihara.github.io/crosstalk-breaker/191126_1024fx20_wnoise/';
 var classNames = [];
@@ -206,7 +215,6 @@ async function loadModel(loadf) {
 //-----------------------
 
 var audio = {};
-// var acontext;// = new AudioContext();
 var mediaStream;
 function startWebcam() {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();//new AudioContext();
@@ -382,8 +390,12 @@ onfire = function(){
       $.get(wfurl);
 //       console.log("webhook");
     }
-    if (sound){
-      sound.play();
+
+    let mute = $("#mute").prop("checked");
+    if (mute == false){
+      if (sound){
+        sound.play();
+      }
     }
 
     setTimeout(function(){
@@ -676,14 +688,6 @@ window.onload = function() {
 //     console.log("no cookie");
   }
 
-  var cookie = $.cookie('soundurl');
-  if(cookie){
-    console.log(cookie);
-    $('#soundurl').val(cookie);
-  }else{
-    console.log("no cookie");
-  }
-
 }
 $("#webhookbutton").click(function(){
   wfurl = $('#webhookurl').val()
@@ -697,19 +701,6 @@ $("#webhookbutton").click(function(){
   $('#webhookbutton').prop('disabled', true);
 });
 
-$("#soundbutton").click(function(){
-  let surl = $('#soundurl').val()
-  sound = new Audio(surl);
-  console.log(surl);
-  if (surl != ''){
-    $.cookie('soundurl',surl);
-  }else{
-    console.log("no url. default loaded.");
-    sound = new Audio("https://rawgit.com/Fulox/FullScreenMario-JSON/master/Sounds/Sounds/mp3/Power%20Down.mp3");
-  }
-  $('#soundurl').prop('disabled', true);
-  $('#soundbutton').prop('disabled', true);
-});
 
 </script>
   </body>
