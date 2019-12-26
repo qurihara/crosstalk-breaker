@@ -1,5 +1,5 @@
 {
-  "name":"Crosstalk Detector",
+  "name":"Crosstalk Breaker",
   "short_name":"Crosstalk",
   "icons": [{
       "src": "https://qurihara.github.io/crosstalk-breaker/icon/android/drawable-xxxhdpi/ic_launcher.png",
