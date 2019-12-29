@@ -39,32 +39,45 @@
             <div class="col-3">
             </div>
             <div class="col-6">
-              <input type="range" class="form-control-range" name="num" min="1" max="2" step="0.1" value="1.8" onchange="changeValue(this.value)">
-<!--              <h3 id="val" class="text-center h3">1.8</h3> -->
-              <div class="d-flex justify-content-center">
-              <span id="val" class="display-5">1.8</span>
-              </div>
               <div class="d-flex justify-content-center">
                 <div class="btn-toolbar">
                   <div class="btn-group">
                     <button id="start-button1" class="btn btn-primary mb-2">Start</button>
-                    <button id="start-buttonTest" class="btn btn-primary mb-2">Test</button>
                     <button id="clear-button" class="btn btn-primary mb-2">Stop</button>
+                    <a class="btn btn-primary mb-2" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                      Option
+                    </a>
                   </div>
                 </div>
               </div>
               <div class="d-flex justify-content-center">
-                <canvas id="canvas" width="300" height="100"></canvas>
+                <canvas id="canvas" width="300" height="50"></canvas>
               </div>
               <div class="container-b">
                 <div class="output">
-                  <div class="d-flex justify-content-center">
-                    <ul id="console" class="list-unstyled">
-                      <li></li>
-                    </ul>
+                  <div class="container">
+                   <div class="d-flex justify-content-center">
+                    <div class="row">
+                        <div class="col-3">
+                        </div>
+                        <div class="col-6">
+                   <div class="d-flex justify-content-center">
+                     <span class="display-4">
+                          <div id="console">0</div>
+                     </span>
+                   </div>
+                   <div class="d-flex justify-content-center">
+                          <span class="display-5">Person(s)</span>
+                   </div>
+                          </div>
+                        <div class="col-3">
+                      </div>
+                    </div>
+                   </div>
                   </div>
-                  <br>
-                  <ul id="warning"></ul>
+                  <div class="d-flex justify-content-center">
+                    <div id="warning"></div>
+                  </div>
                 </div>
               </div>
        <!--       <canvas id="myChart"></canvas>            -->
@@ -84,35 +97,56 @@
             </div>
         </div>
       </div>
-      <div class="d-flex justify-content-center">
-        <form class="form-inline">
-          <label class="my-1 mr-2" for="soundurl">Sound</label>
-          <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-primary active mb-2">
-              <input type="radio" name="sound" id="mute" autocomplete="off" checked>Mute
-            </label>
-            <label class="btn btn-primary mb-2">
-              <input type="radio" name="sound" id="soundenabled" autocomplete="off">Enabled
-            </label>
-          </div>
-        </form>
-      </div>
-
-      <div class="d-flex justify-content-center">
-        <p>
-          <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Advanced
-          </a>
-        </p>
-      </div>
       <div class="collapse" id="collapseExample">
         <div class="card card-body">
+              <div class="d-flex justify-content-center">
+                <h3 class="text-center h3">Limit: </h3><h3 id="val" class="text-center h3">1.8</h3>
+<!--              <div class="d-flex justify-content-center">
+              <span id="val" class="display-5">1.8</span>
+              </div>-->
+              </div>
+      <div class="container">
+        <div class="row">
+            <div class="col-4">
+            </div>
+            <div class="col-4">
+              <div class="d-flex justify-content-center">
+                <input type="range" class="form-control-range" name="num" min="1" max="2" step="0.1" value="1.8" onchange="changeValue(this.value)">
+              </div><br>
+            </div>
+            <div class="col-4">
+            </div>
+        </div>
+      </div>
 
-              <form class="form-inline">
-                <label class="my-1 mr-2" for="webhookurl">Webhook</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" id="webhookurl" placeholder="Webhook URL on alert">
-                <button type="button" class="btn btn-primary mb-2" id="webhookbutton">Apply</button>
-              </form>
+
+              <div class="d-flex justify-content-center">
+                <form class="form-inline">
+        <!--          <label class="my-1 mr-2" for="soundurl">Sound</label> -->
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary active mb-2">
+                      <input type="radio" name="sound" id="mute" autocomplete="off" checked>Mute
+                    </label>
+                    <label class="btn btn-primary mb-2">
+                      <input type="radio" name="sound" id="soundenabled" autocomplete="off">Beep
+                    </label>
+                  </div>
+                </form>
+              </div>
+              <div class="d-flex justify-content-center">
+                <form class="form-inline">
+                  <label class="my-1 mr-2" for="webhookurl">Webhook</label>
+                  <input type="text" class="form-control mb-2 mr-sm-2" id="webhookurl" placeholder="Webhook URL on alert">
+                  <button type="button" class="btn btn-primary mb-2" id="webhookbutton">Apply</button>
+                </form>
+              </div>
+              <div class="d-flex justify-content-center">
+                <div class="btn-toolbar">
+                  <div class="btn-group">
+                    <button id="start-buttonTest" class="btn btn-primary mb-2">Test</button>
+                  </div>
+                </div>
+              </div>
         </div>
       </div>
     </article>
@@ -209,13 +243,13 @@ let model;
 async function loadModel(loadf) {
     let modelfile = modelname + 'model.json';
 	console.log("model loading.. : " + modelfile);
-	$("#console").html(`<li>model loading...</li>`);
+	$("#warning").html(`model loading...`);
 	// model=await tf.loadModel(modelfile);
 // 	model=await tf.loadLayersModel(modelfile);
 // 	model=await tf.loadGraphModel(modelfile);
 	model=await loadf(modelfile);
 	console.log("model loaded.");
-	$("#console").html('<li>' + modelname + ' loaded.</li>');
+	$("#warning").html(modelname + ' loaded.');
 //    	startWebcam();
     modelLoaded = true;
 
@@ -233,7 +267,8 @@ function startWebcam() {
 //     acontext = new (window.AudioContext || window.webkitAudioContext)();//new AudioContext();
     recordingFlg = true;
 	console.log("mic start.");
-	$("#console").html(`<li>mic start.</li>`);
+// 	$("#warning").html(`mic start.`);
+	$("#warning").empty();
 
 // 	// Older browsers might not implement mediaDevices at all, so we set an empty object first
 // 	if (navigator.mediaDevices === undefined) {
@@ -347,7 +382,7 @@ async function predict(tensor){
       });
       enqueue(sr);
 //      enqueue(results[0].num);
-      $("#console").append(`<li><span class="display-4">${Math.round(sr*100)/100}</span></li>`);
+      $("#console").append(`${Math.round(sr*100)/100}`);
 //       $("#console").append(`<li><span class="display-4">${results[0].className}</span></li>`);
 //       $("#console").append(`<li><span class="display-4">${Math.round(average()*100)/100}</span></li>`);
       if (average() >= fireCount){
@@ -365,7 +400,7 @@ async function predict(tensor){
 //       console.log(prediction[0]);
       sr = prediction[0];
       enqueue(sr);
-      $("#console").append(`<li><span class="display-4">${Math.round(prediction[0]*100)/100}</span></li>`);
+      $("#console").append(`<span class="display-4">${Math.round(prediction[0]*100)/100}</span>`);
       if (average() >= fireCount){//warnThre) {
         prevFire++;
         onfire();
@@ -639,6 +674,7 @@ var config = {
 			backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
 			borderColor: chartColors.blue,
 			fill: false,
+			borderDash: [8, 4],
 			cubicInterpolationMode: 'monotone',
 			data: []
 		}, {
