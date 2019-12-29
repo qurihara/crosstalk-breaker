@@ -55,45 +55,17 @@
               </div>
               <div class="container-b">
                 <div class="output">
-      <div class="container">
-       <div class="d-flex justify-content-center">
-        <div class="row">
-            <div class="col-2">
-            </div>
-            <div class="col-3">
-               <div class="d-flex justify-content-center">
-                      <span class="display-5">Now</span>
-               </div>
-               <div class="d-flex justify-content-center">
-                 <span class="display-4">
-                      <div id="console">0</div>
-                 </span>
-               </div>
-               <div class="d-flex justify-content-center">
-                      <span class="display-5">mora/s</span>
-               </div>
-            </div>
-            <div class="col-2">
-            </div>
-            <div class="col-3">
                <div class="d-flex justify-content-center">
                       <span class="display-5">Average</span>
                </div>
                <div class="d-flex justify-content-center">
                  <span class="display-4">
-                      <div id="console2">0</div>
+                      <div id="console2">0.0</div>
                  </span>
                </div>
                <div class="d-flex justify-content-center">
                       <span class="display-5">mora/s</span>
                </div>
-            </div>
-            <div class="col-2">
-            </div>
-        </div>
-       </div>
-      </div>
-
 <!--
                   <div class="d-flex justify-content-center">
                     <ul id="console2" class="list-unstyled">
@@ -175,6 +147,18 @@
                   </div>
                 </div>
               </div>
+             <div class="d-flex justify-content-center">
+                    <span class="display-5">Now</span>
+             </div>
+             <div class="d-flex justify-content-center">
+               <span class="display-4">
+                    <div id="console">0.0</div>
+               </span>
+             </div>
+             <div class="d-flex justify-content-center">
+                    <span class="display-5">mora/s</span>
+             </div>
+
         </div>
       </div>
     </article>
@@ -373,8 +357,8 @@ async function predict(tensor){
   enqueue(sr);
   $("#console").empty();
   $("#console2").empty();
-  $("#console").append(`${Math.round(sr*100)/100}`);
-  $("#console2").append(`${Math.round(average()*100)/100}`);
+  $("#console").append(`${Math.round(sr*10)/10}`);
+  $("#console2").append(`${Math.round(average()*10)/10}`);
   if (average() >= fireCount){
     onfire();
   }
